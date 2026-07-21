@@ -56,8 +56,49 @@ function HomePage() {
 
 function HomeContent() {
   const { count, setOpen } = useCart();
+  const [loading, setLoading] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFadeOut(true);
+      const hideTimer = setTimeout(() => setLoading(false), 700);
+      return () => clearTimeout(hideTimer);
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-brown-dark selection:bg-coral selection:text-cream">
+      {/* Preloader loading screen with Maltese cross brand logo */}
+      {loading && (
+        <div
+          className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FEFCF7] transition-all duration-700 ease-out ${
+            fadeOut ? "opacity-0 scale-95 pointer-events-none" : "opacity-100"
+          }`}
+        >
+          <div className="flex flex-col items-center gap-6 max-w-sm px-6 text-center">
+            {/* Pulsing Logo */}
+            <div className="relative animate-pulse-slow">
+              <img
+                src="/logo-cantine.png"
+                alt="La Cantine de l'Ordre de Malte de Djougou"
+                className="w-64 sm:w-80 h-auto drop-shadow-md"
+              />
+            </div>
+            
+            {/* Shimmering Loading bar */}
+            <div className="relative w-48 h-1.5 bg-cream-soft rounded-full overflow-hidden border border-border/20">
+              <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-coral to-amber rounded-full animate-loading-bar" />
+            </div>
+            
+            <p className="font-display text-xs font-bold text-brown-dark/50 tracking-widest uppercase animate-pulse">
+              Chargement...
+            </p>
+          </div>
+        </div>
+      )}
+
       <Header />
       <main>
         <Hero />
@@ -137,24 +178,23 @@ function Hero() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Plat du jour dynamique de la section Hero (change automatiquement selon le jour de la semaine)
-  const currentHeroDish = useMemo(() => {
-    const DAYS_OF_WEEK = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-    const todayName = DAYS_OF_WEEK[new Date().getDay()];
-    
-    const HERO_DISH_BY_DAY: Record<string, string> = {
-      Lundi: "riz-gras",
-      Mardi: "pate-rouge",
-      Mercredi: "igname",
-      Jeudi: "riz-gras",
-      Vendredi: "attieke",
-      Samedi: "poulet-frites",
-      Dimanche: "gombo",
-    };
-
-    const currentHeroDishId = HERO_DISH_BY_DAY[todayName] || "riz-gras";
-    return MENU.find((d) => d.id === currentHeroDishId) || MENU[0];
+  // Liste de sélection de plats pour le défilement automatique (effet vidéo montrant la diversité)
+  const slideshowDishes = useMemo(() => {
+    const ids = ["riz-gras", "pate-rouge", "igname", "attieke", "poulet-frites", "gombo"];
+    return MENU.filter((d) => ids.includes(d.id));
   }, []);
+
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  // Effet de défilement automatique simulant une boucle vidéo de présentation des plats
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % slideshowDishes.length);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, [slideshowDishes.length]);
+
+  const activeDish = slideshowDishes[slideIndex] || slideshowDishes[0];
 
   return (
     <section id="hero" className="relative overflow-hidden bg-gradient-to-b from-cream via-cream/60 to-background pb-16 pt-8 sm:pb-24 sm:pt-14">
@@ -221,38 +261,52 @@ function Hero() {
           </dl>
         </div>
 
-        {/* Right Column: Animated Floating Hero Dish */}
-        <div className="relative flex justify-center">
+        {/* Right Column: Carrousel automatique cinématique simulant la vidéo de défilement des plats */}
+        <div className="relative flex justify-center w-full">
           <div
-            className="animate-float relative aspect-square w-full max-w-md overflow-hidden rounded-[2.5rem] shadow-2xl shadow-coral/25 ring-8 ring-background/90 sm:aspect-[4/5] sm:max-w-lg"
+            className="animate-float relative aspect-square w-full max-w-md overflow-hidden rounded-[2.5rem] shadow-2xl shadow-coral/25 ring-8 ring-background/90 sm:aspect-[4/5] sm:max-w-lg animate-in fade-in duration-1000"
             style={{ transform: `translateY(${-offset}px)` }}
           >
-            <img
-              src={currentHeroDish.image || heroDishFallback}
-              alt={currentHeroDish.name}
-              className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-              width={1600}
-              height={1400}
-            />
+            {slideshowDishes.map((d, i) => {
+              const isActive = i === slideIndex;
+              return (
+                <div
+                  key={d.id}
+                  className={`absolute inset-0 transition-all duration-[1200ms] ease-in-out ${
+                    isActive ? "opacity-100 scale-105 rotate-0" : "opacity-0 scale-95 rotate-1 pointer-events-none"
+                  }`}
+                >
+                  <img
+                    src={d.image || heroDishFallback}
+                    alt={d.name}
+                    className="h-full w-full object-cover"
+                    width={1600}
+                    height={1400}
+                  />
+                </div>
+              );
+            })}
 
-            {/* Subtle inset highlight overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/50 via-transparent to-transparent" />
+            {/* Inset highlight shadow */}
+            <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/50 via-transparent to-transparent pointer-events-none" />
           </div>
 
-          {/* Floating Card 1: Dish of the day */}
-          <div className="animate-float-delayed absolute -bottom-6 -left-4 hidden items-center gap-3 rounded-2xl bg-background/95 p-4 shadow-xl ring-1 ring-border/80 backdrop-blur-xl sm:flex">
+          {/* Floating Card 1: Active Dish name */}
+          <div className="animate-float-delayed absolute -bottom-6 -left-4 hidden items-center gap-3 rounded-2xl bg-background/95 p-4 shadow-xl ring-1 ring-border/80 backdrop-blur-xl sm:flex transition-all duration-500">
             <div className="grid h-11 w-11 place-items-center rounded-xl bg-amber/20 text-amber">
               <ChefHat className="h-6 w-6" />
             </div>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-brown-dark/60">Plat du jour</p>
-              <p className="font-display text-sm font-extrabold text-brown-dark">{currentHeroDish.name}</p>
+            <div className="min-w-[125px]">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-brown-dark/60">Spécialité Maison</p>
+              <p className="font-display text-sm font-extrabold text-brown-dark truncate transition-all duration-300">
+                {activeDish.name}
+              </p>
             </div>
           </div>
 
           {/* Floating Card 2: Price Tag */}
-          <div className="animate-float absolute -right-3 top-8 hidden rounded-full bg-coral px-5 py-2.5 font-display text-sm font-black text-cream shadow-xl shadow-coral/30 ring-4 ring-background shimmer-badge sm:block">
-            {formatFCFA(currentHeroDish.price)}
+          <div className="animate-float absolute -right-3 top-8 hidden rounded-full bg-coral px-5 py-2.5 font-display text-sm font-black text-cream shadow-xl shadow-coral/30 ring-4 ring-background shimmer-badge sm:block transition-all duration-300">
+            {formatFCFA(activeDish.price)}
           </div>
         </div>
       </div>
