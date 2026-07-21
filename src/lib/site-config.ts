@@ -1,9 +1,10 @@
 export const SITE = {
-  name: "Anifath Resto",
-  whatsapp: "22900000000", // TODO: remplacer par le vrai numéro
-  phone: "+229 00 00 00 00",
-  phoneRaw: "+22900000000",
-  address: "Enceinte de l'Hôpital — Cotonou, Bénin",
+  name: "La Cantine",
+  fullName: "La Cantine de l'Ordre de Malte de Djougou",
+  whatsapp: "2290197421809",
+  phone: "+229 01 43 54 54 15",
+  phoneRaw: "+2290143545415",
+  address: "Enceinte de l'Hôpital de l'Ordre de Malte — Djougou, Bénin",
   hours: "Lun – Dim · 06h30 – 22h00",
 };
 

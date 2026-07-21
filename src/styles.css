@@ -36,46 +36,47 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-coral: var(--coral);
-  --color-coral-dark: var(--coral-dark);
-  --color-amber: var(--amber);
-  --color-brown-dark: var(--brown-dark);
-  --color-cream: var(--cream);
-  --color-cream-soft: var(--cream-soft);
-  --color-warm-gray: var(--warm-gray);
+  /* 60-30-10 : Rouge 60%, Doré 30%, Noir 10% */
+  --color-coral: #A90E02;
+  --color-coral-dark: #7F0A01;
+  --color-amber: #FFBD4A;
+  --color-brown-dark: #0E0E0E;
+  --color-cream: #FFF7ED;
+  --color-cream-soft: #FDE6D2;
+  --color-warm-gray: #52525B;
 }
 
 :root {
   --radius: 1rem;
 
-  /* Anifath palette */
-  --coral: oklch(0.63 0.17 38);        /* #D85A30 */
-  --coral-dark: oklch(0.44 0.14 38);   /* #993C1D */
-  --amber: oklch(0.75 0.15 65);        /* #EF9F27 */
-  --brown-dark: oklch(0.28 0.09 40);   /* #4A1B0C */
-  --cream: oklch(0.96 0.02 40);        /* #FAECE7 */
-  --cream-soft: oklch(0.87 0.06 35);   /* #F5C4B3 */
-  --warm-gray: oklch(0.55 0.02 40);
+  /* 60-30-10 Palette */
+  --coral: #A90E02;
+  --coral-dark: #7F0A01;
+  --amber: #FFBD4A;
+  --brown-dark: #0E0E0E;
+  --cream: #FFF7ED;
+  --cream-soft: #FDE6D2;
+  --warm-gray: #52525B;
 
-  --background: oklch(0.985 0.008 60);
-  --foreground: var(--brown-dark);
-  --card: oklch(1 0 0);
-  --card-foreground: var(--brown-dark);
-  --popover: oklch(1 0 0);
-  --popover-foreground: var(--brown-dark);
-  --primary: var(--coral);
-  --primary-foreground: var(--cream);
-  --secondary: var(--cream);
-  --secondary-foreground: var(--brown-dark);
-  --muted: oklch(0.95 0.01 40);
-  --muted-foreground: var(--warm-gray);
-  --accent: var(--amber);
-  --accent-foreground: var(--brown-dark);
-  --destructive: oklch(0.55 0.22 27);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.9 0.02 40);
-  --input: oklch(0.92 0.02 40);
-  --ring: var(--coral);
+  --background: #FFFBF7;
+  --foreground: #0E0E0E;
+  --card: #FFFFFF;
+  --card-foreground: #0E0E0E;
+  --popover: #FFFFFF;
+  --popover-foreground: #0E0E0E;
+  --primary: #A90E02;
+  --primary-foreground: #FFFFFF;
+  --secondary: #FFBD4A;
+  --secondary-foreground: #0E0E0E;
+  --muted: #F4F4F5;
+  --muted-foreground: #52525B;
+  --accent: #FFBD4A;
+  --accent-foreground: #0E0E0E;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: #F3E4D8;
+  --input: #E4E4E7;
+  --ring: #A90E02;
 }
 
 @layer base {
@@ -91,6 +92,7 @@
     font-family: var(--font-sans);
     font-weight: 500;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
@@ -99,11 +101,68 @@
   }
 }
 
+/* Keyframes Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(0.8deg); }
+}
+
+@keyframes float-reverse {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-1deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.1); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes cart-pulse {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.35) rotate(-6deg); }
+  60% { transform: scale(0.9) rotate(3deg); }
+  100% { transform: scale(1); }
+}
+
+/* Utilities */
+@utility animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@utility animate-float-delayed {
+  animation: float-reverse 6s ease-in-out 1s infinite;
+}
+
+@utility animate-pulse-glow {
+  animation: pulse-glow 7s ease-in-out infinite;
+}
+
+/* Glassmorphism utility */
+@utility glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(243, 228, 216, 0.8);
+  box-shadow: 0 10px 30px -10px rgba(169, 14, 2, 0.12);
+}
+
+@utility glass-dark {
+  background: rgba(14, 14, 14, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 189, 74, 0.2);
+}
+
 /* Reveal on scroll */
 @utility reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 @utility reveal-in {
@@ -113,27 +172,28 @@
 
 /* Magnetic hover for dish cards */
 @utility dish-hover {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
   &:hover {
-    transform: translateY(-6px) scale(1.03);
-    box-shadow: 0 20px 40px -18px oklch(0.28 0.09 40 / 0.35);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 45px -15px rgba(169, 14, 2, 0.25);
   }
 }
 
 @utility cart-pulse {
-  animation: cart-pulse 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: cart-pulse 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes cart-pulse {
-  0% { transform: scale(1); }
-  35% { transform: scale(1.28); }
-  70% { transform: scale(0.92); }
-  100% { transform: scale(1); }
-}
-
-@keyframes fly-cart {
-  0% { transform: translate(0, 0) scale(1); opacity: 1; }
-  100% { transform: var(--fly-target) scale(0.1); opacity: 0; }
+@utility shimmer-badge {
+  position: relative;
+  overflow: hidden;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 3s infinite;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

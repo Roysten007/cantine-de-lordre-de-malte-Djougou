@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { Menu, ShoppingBag, X } from "lucide-react";
+import { Menu, ShoppingBag, X, Sparkles, PhoneCall, Home, ChefHat, HeartHandshake, Phone } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { SITE } from "@/lib/site-config";
+import Dock from "@/components/ui/Dock";
 
 const NAV = [
   { label: "Accueil", href: "#hero" },
@@ -13,61 +15,136 @@ export function Header() {
   const { count, setOpen, pulseKey } = useCart();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeNav, setActiveNav] = useState("#hero");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+      const sections = NAV.map((n) => n.href.substring(1));
+      for (const sectionId of sections.reverse()) {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 120) {
+            setActiveNav(`#${sectionId}`);
+            break;
+          }
+        }
+      }
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const handleScrollTo = (href: string) => {
+    const sectionId = href.substring(1);
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const dockItems = [
+    {
+      label: "Accueil",
+      icon: <Home className="h-5 w-5 text-brown-dark transition-colors duration-200" />,
+      onClick: () => handleScrollTo("#hero"),
+      className: activeNav === "#hero" ? "active" : "",
+    },
+    {
+      label: "Menu",
+      icon: <ChefHat className="h-5 w-5 text-brown-dark transition-colors duration-200" />,
+      onClick: () => handleScrollTo("#menu"),
+      className: activeNav === "#menu" ? "active" : "",
+    },
+    {
+      label: "À propos",
+      icon: <HeartHandshake className="h-5 w-5 text-brown-dark transition-colors duration-200" />,
+      onClick: () => handleScrollTo("#about"),
+      className: activeNav === "#about" ? "active" : "",
+    },
+    {
+      label: "Contact",
+      icon: <Phone className="h-5 w-5 text-brown-dark transition-colors duration-200" />,
+      onClick: () => handleScrollTo("#contact"),
+      className: activeNav === "#contact" ? "active" : "",
+    },
+  ];
+
   return (
     <header
-      className={`sticky top-0 z-40 transition-all ${scrolled ? "bg-background/90 backdrop-blur-md shadow-sm" : "bg-background/60 backdrop-blur"}`}
+      className={`sticky top-0 z-40 transition-all duration-300 ${
+        scrolled
+          ? "bg-background/80 backdrop-blur-xl shadow-lg shadow-brown-dark/5 ring-1 ring-border/50 py-2.5"
+          : "bg-transparent backdrop-blur-sm py-4"
+      }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4">
-        <a href="#hero" className="flex min-w-0 items-center gap-2">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-coral text-cream font-display text-lg font-black">
-            a
-          </span>
-          <span className="font-display text-xl font-extrabold tracking-tight text-brown-dark">
-            Anifath <span className="text-coral">Resto</span>
-          </span>
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+        {/* Logo */}
+        <a href="#hero" className="group flex items-center gap-3">
+          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-coral to-amber text-cream font-display text-xl font-black shadow-md shadow-coral/30 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
+            c
+          </div>
+          <div className="flex flex-col">
+            <span className="font-display text-xl font-extrabold tracking-tight text-brown-dark transition-colors group-hover:text-coral">
+              La Cantine
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-brown-dark/50">
+              Ordre de Malte • Djougou
+            </span>
+          </div>
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          {NAV.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              className="text-sm font-semibold text-brown-dark/80 transition-colors hover:text-coral"
-            >
-              {n.label}
-            </a>
-          ))}
+        {/* Desktop Navigation with fixed width to prevent layout shifts */}
+        <nav className="hidden md:flex w-[260px] shrink-0 items-center justify-center overflow-visible">
+          <Dock
+            items={dockItems}
+            magnification={58}
+            distance={130}
+            panelHeight={48}
+            baseItemSize={38}
+          />
         </nav>
 
-        <div className="flex items-center gap-2">
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3">
+          <a
+            href={`tel:${SITE.phoneRaw}`}
+            className="hidden items-center gap-2 rounded-full bg-cream px-3.5 py-2 text-xs font-bold text-brown-dark ring-1 ring-border transition-all hover:bg-cream-soft hover:shadow-sm lg:inline-flex"
+          >
+            <PhoneCall className="h-3.5 w-3.5 text-coral" />
+            <span>{SITE.phone}</span>
+          </a>
+
+          {/* Cart Button */}
           <button
             onClick={() => setOpen(true)}
             aria-label={`Ouvrir le panier (${count} article${count > 1 ? "s" : ""})`}
-            className="relative grid h-11 w-11 place-items-center rounded-full bg-cream text-brown-dark ring-1 ring-border transition-colors hover:bg-cream-soft"
+            className="relative grid h-11 w-11 place-items-center rounded-full bg-cream text-brown-dark ring-1 ring-border/80 transition-all duration-300 hover:bg-cream-soft hover:scale-105 active:scale-95 shadow-sm"
           >
             <span key={pulseKey} className="cart-pulse grid place-items-center">
-              <ShoppingBag className="h-5 w-5" />
+              <ShoppingBag className="h-5 w-5 text-brown-dark" />
             </span>
             {count > 0 && (
-              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-coral px-1 text-[11px] font-bold text-cream">
+              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-coral px-1 text-[11px] font-extrabold text-cream shadow-md shadow-coral/40 animate-bounce">
                 {count}
               </span>
             )}
           </button>
+
+          {/* Commander Button */}
           <a
-            href="#menu"
-            className="hidden shrink-0 rounded-full bg-coral px-5 py-2.5 text-sm font-semibold text-cream shadow-sm transition-all hover:bg-coral-dark hover:shadow-md sm:inline-flex"
+            href={buildWhatsAppUrl("Bonjour, je souhaite commander.")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-coral to-coral-dark px-5 py-2.5 font-display text-xs font-bold text-cream shadow-lg shadow-coral/25 transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 sm:inline-flex"
           >
-            Commander
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Commander maintenant</span>
           </a>
+
+          {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Menu"
@@ -77,23 +154,28 @@ export function Header() {
           </button>
         </div>
       </div>
+
+      {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="border-t border-border bg-background md:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
+        <div className="border-b border-border/80 bg-background/95 backdrop-blur-2xl md:hidden animate-in slide-in-from-top-2 duration-300">
+          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
             {NAV.map((n) => (
-              <a
+              <button
                 key={n.href}
-                href={n.href}
-                onClick={() => setMobileOpen(false)}
-                className="rounded-xl px-3 py-3 text-sm font-semibold text-brown-dark hover:bg-cream"
+                onClick={() => {
+                  setMobileOpen(false);
+                  handleScrollTo(n.href);
+                }}
+                className="flex items-center justify-between rounded-2xl px-4 py-3 text-left text-sm font-bold text-brown-dark transition-colors hover:bg-cream"
               >
-                {n.label}
-              </a>
+                <span>{n.label}</span>
+                <span className="text-coral">→</span>
+              </button>
             ))}
             <a
               href="#menu"
               onClick={() => setMobileOpen(false)}
-              className="mt-1 rounded-full bg-coral px-5 py-3 text-center text-sm font-semibold text-cream"
+              className="mt-2 rounded-2xl bg-coral px-5 py-3.5 text-center font-display text-sm font-bold text-cream shadow-md shadow-coral/20"
             >
               Commander maintenant
             </a>
@@ -102,4 +184,8 @@ export function Header() {
       )}
     </header>
   );
+}
+
+function buildWhatsAppUrl(message: string) {
+  return `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(message)}`;
 }
