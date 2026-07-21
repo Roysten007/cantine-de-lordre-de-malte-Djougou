@@ -77,21 +77,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Anifath Resto — Cantine hospitalière & restaurant à Cotonou" },
+      {
+        name: "description",
+        content:
+          "Anifath Resto : plats faits maison, frais chaque jour, à l'hôpital comme en ville. Commande sur WhatsApp ou par téléphone.",
+      },
+      { name: "theme-color", content: "#D85A30" },
+      { property: "og:title", content: "Anifath Resto — Des plats faits maison, prêts pour toi" },
+      {
+        property: "og:description",
+        content: "Cantine hospitalière & resto ouvert à tous à Cotonou. Commande sur WhatsApp.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Montserrat:wght@400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
