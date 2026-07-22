@@ -1,4 +1,4 @@
-﻿import type { Dish } from "@/lib/cart";
+import type { Dish } from "@/lib/cart";
 
 // ── Plats principaux ──────────────────────────────────────────
 import attieke from "@/assets/dish-attieke.jpg";
@@ -23,6 +23,16 @@ import sauceLegumes from "@/assets/sauce-legumes.jpg";
 
 // ── Fallback (items sans photo réelle) ────────────────────────
 import rizGras from "@/assets/dish-riz-gras.jpg";
+
+// ── Pâtisserie & Glaces ───────────────────────────────────────
+import pastryCroissant from "@/assets/pastry-croissant.jpg";
+import pastryPainChocolat from "@/assets/pastry-pain-chocolat.jpg";
+import pastryQuatreQuarts from "@/assets/pastry-quatre-quarts.jpg";
+import pastryBeignet from "@/assets/pastry-beignet.jpg";
+import iceCreamVanille from "@/assets/ice-cream-vanille.jpg";
+import iceCreamChocolat from "@/assets/ice-cream-chocolat.jpg";
+import iceCreamFraise from "@/assets/ice-cream-fraise.jpg";
+import iceCreamCoco from "@/assets/ice-cream-coco.jpg";
 
 export const SAUCES = [
   "Sauce Crincrin",
@@ -92,7 +102,26 @@ export const DAYS_OF_WEEK = [
 export type DayOfWeek = (typeof DAYS_OF_WEEK)[number];
 
 export const CATEGORIES = ["Tous les plats", "Petit déjeuner", "Déjeuner", "Dîner"] as const;
-export const COMING_SOON_CATEGORIES = ["Pâtisserie", "Glaces", "Boissons"] as const;
+
+export type PâtisserieGlacesItem = {
+  id: string;
+  name: string;
+  image: string;
+  category: "Pâtisserie" | "Glaces";
+};
+
+export const PATISSERIE_GLACES_ITEMS: PâtisserieGlacesItem[] = [
+  // Pâtisserie
+  { id: "pg-croissant", name: "Croissant", image: pastryCroissant, category: "Pâtisserie" },
+  { id: "pg-pain-chocolat", name: "Pain au chocolat", image: pastryPainChocolat, category: "Pâtisserie" },
+  { id: "pg-quatre-quarts", name: "Gâteau quatre-quarts", image: pastryQuatreQuarts, category: "Pâtisserie" },
+  { id: "pg-beignet", name: "Beignet sucré", image: pastryBeignet, category: "Pâtisserie" },
+  // Glaces
+  { id: "pg-vanille", name: "Vanille", image: iceCreamVanille, category: "Glaces" },
+  { id: "pg-chocolat", name: "Chocolat", image: iceCreamChocolat, category: "Glaces" },
+  { id: "pg-fraise", name: "Fraise", image: iceCreamFraise, category: "Glaces" },
+  { id: "pg-coco", name: "Coco", image: iceCreamCoco, category: "Glaces" },
+];
 
 // ── Petit déjeuner : TOUJOURS disponible, 7j/7 ───────────────
 export const BREAKFAST_MENU: Dish[] = [

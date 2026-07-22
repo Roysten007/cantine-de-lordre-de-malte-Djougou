@@ -4,7 +4,6 @@ import { CartProvider, useCart, formatFCFA, type Dish } from "@/lib/cart";
 import {
   MENU,
   CATEGORIES,
-  COMING_SOON_CATEGORIES,
   DAYS_OF_WEEK,
   WEEKLY_SCHEDULE,
   BREAKFAST_MENU,
@@ -19,6 +18,7 @@ import { CartPanel } from "@/components/anifath/CartPanel";
 import { DishCard } from "@/components/anifath/DishCard";
 import { SauceSelectorModal } from "@/components/anifath/SauceSelectorModal";
 import { SaucesSection } from "@/components/anifath/SaucesSection";
+import { PatisserieGlacesSection } from "@/components/anifath/PatisserieGlacesSection";
 import { useReveal } from "@/hooks/use-reveal";
 import heroDishFallback from "@/assets/hero-dish.jpg";
 import kitchen1 from "@/assets/kitchen-1.jpg";
@@ -101,6 +101,7 @@ function HomeContent() {
         <TrustBar />
         <MenuSection />
         <SaucesSection />
+        <PatisserieGlacesSection />
         <Gallery />
         <Offer />
         <HowToOrder />
@@ -366,8 +367,6 @@ function MenuSection() {
     return [...breakfastDishes, ...LUNCH_MENU, ...DINNER_MENU];
   }, [cat, breakfastDishes]);
 
-  const isComingSoon = (COMING_SOON_CATEGORIES as readonly string[]).includes(cat);
-
   return (
     <Section id="menu" className="py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -625,57 +624,29 @@ function MenuSection() {
                 </button>
               ))}
 
-              {COMING_SOON_CATEGORIES.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setCat(c)}
-                  className={`relative rounded-full px-5 py-2.5 font-display text-xs font-bold transition-all duration-300 ${
-                    cat === c
-                      ? "bg-amber/90 text-brown-dark shadow-lg ring-2 ring-amber scale-105"
-                      : "bg-cream/40 text-brown-dark/70 ring-1 ring-border/50 hover:bg-cream-soft hover:text-brown-dark"
-                  }`}
-                >
-                  <span>{c}</span>
-                  <span className="ml-1.5 rounded-full bg-coral/15 px-1.5 py-0.5 text-[9px] font-black uppercase text-coral">
-                    À venir
-                  </span>
-                </button>
-              ))}
+              {/* Onglet Pâtisserie & Glaces — vitrine, scroll vers section */}
+              <a
+                href="#patisserie-glaces"
+                className="inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 font-display text-xs font-bold transition-all duration-300 bg-amber/15 text-brown-dark ring-1 ring-amber/40 hover:bg-amber/30 hover:scale-102"
+              >
+                <span>Pâtisserie &amp; Glaces</span>
+                <span className="rounded-full bg-coral/15 px-1.5 py-0.5 text-[9px] font-black uppercase text-coral">
+                  Sur place
+                </span>
+              </a>
             </div>
 
             {/* Dishes Grid */}
-            {isComingSoon ? (
-              <div className="mt-10 rounded-[2.5rem] bg-gradient-to-br from-cream via-amber/10 to-cream p-8 sm:p-12 text-center ring-1 ring-border/80 max-w-2xl mx-auto shadow-sm">
-                <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-3xl bg-amber/20 text-coral">
-                  <i className="fa-solid fa-wand-magic-sparkles text-2xl"></i>
-                </div>
-                <h3 className="font-display text-2xl font-black text-brown-dark">
-                  {cat} — Bientôt disponible !
-                </h3>
-                <p className="mt-3 text-sm font-medium leading-relaxed text-brown-dark/75">
-                  Les tarifs et recettes pour les pâtisseries, glaces et boissons seront intégrés dès réception de la fiche client définitive.
-                </p>
-                <div className="mt-6 flex justify-center">
-                  <button
-                    onClick={() => setCat("Tous les plats")}
-                    className="rounded-full bg-brown-dark px-6 py-3 font-display text-xs font-bold text-cream hover:bg-coral transition-all shadow-md"
-                  >
-                    Retour à la carte complète
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {catalogDishes.map((d, idx) => (
-                  <DishCard
-                    key={d.id}
-                    dish={d}
-                    big={idx === 0}
-                    onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {catalogDishes.map((d, idx) => (
+                <DishCard
+                  key={d.id}
+                  dish={d}
+                  big={idx === 0}
+                  onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
