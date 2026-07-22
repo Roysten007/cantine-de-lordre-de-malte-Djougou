@@ -21,9 +21,6 @@ import { SaucesSection } from "@/components/anifath/SaucesSection";
 import { PatisserieGlacesSection } from "@/components/anifath/PatisserieGlacesSection";
 import { useReveal } from "@/hooks/use-reveal";
 import heroDishFallback from "@/assets/hero-dish.jpg";
-import kitchen1 from "@/assets/kitchen-1.jpg";
-import kitchen2 from "@/assets/kitchen-2.jpg";
-import kitchen3 from "@/assets/kitchen-3.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -102,12 +99,10 @@ function HomeContent() {
         <MenuSection />
         <SaucesSection />
         <PatisserieGlacesSection />
-        <Gallery />
         <Offer />
         <HowToOrder />
         <Testimonials />
         <FAQ />
-        <About />
         <Contact />
       </main>
       <Footer />
@@ -1085,7 +1080,6 @@ function Footer() {
           <div className="flex gap-4">
             <a href="#hero" className="hover:text-coral transition-colors">Accueil</a>
             <a href="#menu" className="hover:text-coral transition-colors">Menu</a>
-            <a href="#sauces" className="hover:text-coral transition-colors">Nos sauces</a>
             <a href="#contact" className="hover:text-coral transition-colors">Contact</a>
           </div>
         </div>

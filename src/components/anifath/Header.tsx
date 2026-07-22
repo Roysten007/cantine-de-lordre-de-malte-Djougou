@@ -6,7 +6,6 @@ import Dock from "@/components/ui/Dock";
 const NAV = [
   { label: "Accueil", href: "#hero" },
   { label: "Menu", href: "#menu" },
-  { label: "À propos", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -56,12 +55,6 @@ export function Header() {
       icon: <i className="fa-solid fa-utensils text-sm text-brown-dark transition-colors duration-200"></i>,
       onClick: () => handleScrollTo("#menu"),
       className: activeNav === "#menu" ? "active" : "",
-    },
-    {
-      label: "À propos",
-      icon: <i className="fa-solid fa-hand-holding-heart text-sm text-brown-dark transition-colors duration-200"></i>,
-      onClick: () => handleScrollTo("#about"),
-      className: activeNav === "#about" ? "active" : "",
     },
     {
       label: "Contact",
