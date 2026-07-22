@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Minus, Phone, Plus, ShoppingBag, Trash2, X, Check } from "lucide-react";
 import { useCart, formatFCFA } from "@/lib/cart";
 import { buildWhatsAppUrl, SITE } from "@/lib/site-config";
 
@@ -34,12 +33,15 @@ export function CartPanel() {
   }[clientType];
 
   const whatsappMsg = [
-    `*Nouvelle commande - La Cantine*`,
+    `*Nouvelle commande - La Cantine de l'Ordre de Malte*`,
     `👤 *Nom* : ${nom || "Non précisé"}`,
     `ℹ️ *Type* : ${clientTypeLabel}`,
     chambre ? `🏥 *Chambre/Service* : ${chambre}` : "",
     `----------------------------------`,
-    ...items.map((i) => `• ${i.name} × ${i.qty} — ${formatFCFA(i.qty * i.price)}`),
+    ...items.map((i) => {
+      const dishTitle = i.sauce ? `${i.name} — ${i.sauce}` : i.name;
+      return `• ${dishTitle} × ${i.qty} — ${formatFCFA(i.qty * i.price)}`;
+    }),
     `----------------------------------`,
     `*Total estimé : ${formatFCFA(total)}*`,
   ]
@@ -62,7 +64,7 @@ export function CartPanel() {
         <div className="flex items-center justify-between border-b border-border/80 pb-4">
           <div className="flex items-center gap-2.5">
             <div className="grid h-10 w-10 place-items-center rounded-2xl bg-coral/15 text-coral">
-              <ShoppingBag className="h-5 w-5" />
+              <i className="fa-solid fa-cart-shopping text-base"></i>
             </div>
             <div>
               <h2 className="font-display text-lg font-black text-brown-dark">Ta commande</h2>
@@ -76,7 +78,7 @@ export function CartPanel() {
             aria-label="Fermer"
             className="grid h-8 w-8 place-items-center rounded-full bg-cream text-brown-dark transition-transform hover:scale-110"
           >
-            <X className="h-4 w-4" />
+            <i className="fa-solid fa-xmark text-sm"></i>
           </button>
         </div>
 
@@ -84,6 +86,9 @@ export function CartPanel() {
         <div className="flex-1 overflow-y-auto py-4 pr-1 space-y-5">
           {items.length === 0 ? (
             <div className="py-8 text-center">
+              <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-cream text-coral">
+                <i className="fa-solid fa-basket-shopping text-xl"></i>
+              </div>
               <p className="font-display text-base font-extrabold text-brown-dark">
                 Ton panier est vide pour l'instant.
               </p>
@@ -94,19 +99,31 @@ export function CartPanel() {
           ) : (
             <>
               {/* Order items summary list WITH photos */}
-              <ul className="divide-y divide-border/60 max-h-44 overflow-y-auto pr-1 space-y-2.5">
+              <ul className="divide-y divide-border/60 max-h-52 overflow-y-auto pr-1 space-y-2.5">
                 {items.map((i) => (
                   <li key={i.id} className="flex items-center gap-3 py-2 text-xs">
-                    {i.image && (
+                    {i.image ? (
                       <img
                         src={i.image}
                         alt={i.name}
                         className="h-12 w-12 shrink-0 rounded-xl object-cover shadow-sm ring-1 ring-border/50"
                       />
+                    ) : (
+                      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-cream text-brown-dark/40 ring-1 ring-border/50">
+                        <i className="fa-solid fa-utensils text-sm"></i>
+                      </div>
                     )}
                     <div className="min-w-0 flex-1">
                       <p className="font-bold text-brown-dark truncate">{i.name}</p>
-                      <p className="text-[10px] font-semibold text-coral">{formatFCFA(i.price)} × {i.qty}</p>
+                      {i.sauce && (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-coral/10 px-2 py-0.5 text-[10px] font-extrabold text-coral mt-0.5">
+                          <i className="fa-solid fa-pepper-hot text-[9px]"></i>
+                          <span>Sauce : {i.sauce}</span>
+                        </span>
+                      )}
+                      <p className="text-[10px] font-semibold text-brown-dark/60 mt-0.5">
+                        {formatFCFA(i.price)} × {i.qty}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <div className="flex items-center rounded-full bg-cream ring-1 ring-border/80">
@@ -114,21 +131,21 @@ export function CartPanel() {
                           onClick={() => setQty(i.id, i.qty - 1)}
                           className="grid h-6 w-6 place-items-center text-brown-dark hover:bg-cream-soft rounded-full"
                         >
-                          <Minus className="h-2.5 w-2.5" />
+                          <i className="fa-solid fa-minus text-[10px]"></i>
                         </button>
                         <span className="w-4 text-center font-bold">{i.qty}</span>
                         <button
                           onClick={() => setQty(i.id, i.qty + 1)}
                           className="grid h-6 w-6 place-items-center text-brown-dark hover:bg-cream-soft rounded-full"
                         >
-                          <Plus className="h-2.5 w-2.5" />
+                          <i className="fa-solid fa-plus text-[10px]"></i>
                         </button>
                       </div>
                       <button
                         onClick={() => remove(i.id)}
-                        className="text-brown-dark/40 hover:text-destructive p-1"
+                        className="text-brown-dark/40 hover:text-destructive p-1 transition-colors"
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
+                        <i className="fa-solid fa-trash-can text-xs"></i>
                       </button>
                     </div>
                   </li>
@@ -218,16 +235,17 @@ export function CartPanel() {
                 href={buildWhatsAppUrl(whatsappMsg)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2.5 rounded-full bg-coral py-3 px-4 text-xs font-black uppercase tracking-wider text-cream shadow-lg hover:bg-coral-dark active:scale-98 transition-all"
+                className="flex items-center justify-center gap-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 py-3 px-4 text-xs font-black uppercase tracking-wider text-cream shadow-lg active:scale-98 transition-all"
               >
-                <span>Choisir WhatsApp</span>
+                <i className="fa-brands fa-whatsapp text-base"></i>
+                <span>Commander via WhatsApp</span>
               </a>
 
               <a
                 href={`tel:${SITE.phoneRaw}`}
                 className="flex items-center justify-center gap-2 rounded-full bg-brown-dark py-3 px-4 text-xs font-bold text-cream hover:bg-brown-dark/90 active:scale-98 transition-all"
               >
-                <Phone className="h-3.5 w-3.5 text-coral" />
+                <i className="fa-solid fa-phone text-xs text-amber"></i>
                 <span>Appeler directement</span>
               </a>
             </div>

@@ -154,7 +154,7 @@
 }
 
 @utility animate-loading-bar {
-  animation: loading-bar 2s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+  animation: loading-bar 1.2s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
 }
 
 @utility animate-pulse-slow {
@@ -178,16 +178,17 @@
   border: 1px solid rgba(255, 189, 74, 0.2);
 }
 
-/* Reveal on scroll */
-@utility reveal {
+/* Reveal on scroll (Standard CSS to prevent purging) */
+.reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
-@utility reveal-in {
-  opacity: 1;
-  transform: translateY(0);
+.reveal.reveal-in,
+.reveal-in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 /* Magnetic hover for dish cards */

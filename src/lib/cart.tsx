@@ -8,13 +8,20 @@ export type Dish = {
   image?: string;
   featured?: boolean;
   tag?: string;
+  hasSauceOption?: boolean;
+  defaultSauce?: string;
+  isBreakfastSuggestion?: boolean;
 };
 
-export type CartItem = Dish & { qty: number };
+export type CartItem = Dish & {
+  dishId: string;
+  sauce?: string;
+  qty: number;
+};
 
 type CartCtx = {
   items: CartItem[];
-  add: (d: Dish) => void;
+  add: (d: Dish, sauce?: string) => void;
   remove: (id: string) => void;
   setQty: (id: string, qty: number) => void;
   clear: () => void;
@@ -32,11 +39,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [pulseKey, setPulseKey] = useState(0);
 
-  const add = useCallback((d: Dish) => {
+  const add = useCallback((d: Dish, sauce?: string) => {
+    const itemId = sauce ? `${d.id}-${sauce}` : d.id;
     setItems((prev) => {
-      const found = prev.find((i) => i.id === d.id);
-      if (found) return prev.map((i) => (i.id === d.id ? { ...i, qty: i.qty + 1 } : i));
-      return [...prev, { ...d, qty: 1 }];
+      const found = prev.find((i) => i.id === itemId);
+      if (found) return prev.map((i) => (i.id === itemId ? { ...i, qty: i.qty + 1 } : i));
+      return [...prev, { ...d, id: itemId, dishId: d.id, sauce, qty: 1 }];
     });
     setPulseKey((k) => k + 1);
   }, []);
@@ -72,3 +80,4 @@ export function useCart() {
 }
 
 export const formatFCFA = (n: number) => `${n.toLocaleString("fr-FR")} F`;
+

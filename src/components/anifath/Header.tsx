@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Menu, ShoppingBag, X, Sparkles, PhoneCall, Home, ChefHat, HeartHandshake, Phone } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { SITE } from "@/lib/site-config";
 import Dock from "@/components/ui/Dock";
@@ -48,25 +47,25 @@ export function Header() {
   const dockItems = [
     {
       label: "Accueil",
-      icon: <Home className="h-5 w-5 text-brown-dark transition-colors duration-200" />,
+      icon: <i className="fa-solid fa-house text-sm text-brown-dark transition-colors duration-200"></i>,
       onClick: () => handleScrollTo("#hero"),
       className: activeNav === "#hero" ? "active" : "",
     },
     {
       label: "Menu",
-      icon: <ChefHat className="h-5 w-5 text-brown-dark transition-colors duration-200" />,
+      icon: <i className="fa-solid fa-utensils text-sm text-brown-dark transition-colors duration-200"></i>,
       onClick: () => handleScrollTo("#menu"),
       className: activeNav === "#menu" ? "active" : "",
     },
     {
       label: "À propos",
-      icon: <HeartHandshake className="h-5 w-5 text-brown-dark transition-colors duration-200" />,
+      icon: <i className="fa-solid fa-hand-holding-heart text-sm text-brown-dark transition-colors duration-200"></i>,
       onClick: () => handleScrollTo("#about"),
       className: activeNav === "#about" ? "active" : "",
     },
     {
       label: "Contact",
-      icon: <Phone className="h-5 w-5 text-brown-dark transition-colors duration-200" />,
+      icon: <i className="fa-solid fa-phone text-sm text-brown-dark transition-colors duration-200"></i>,
       onClick: () => handleScrollTo("#contact"),
       className: activeNav === "#contact" ? "active" : "",
     },
@@ -113,7 +112,7 @@ export function Header() {
             href={`tel:${SITE.phoneRaw}`}
             className="hidden items-center gap-2 rounded-full bg-cream px-3.5 py-2 text-xs font-bold text-brown-dark ring-1 ring-border transition-all hover:bg-cream-soft hover:shadow-sm lg:inline-flex"
           >
-            <PhoneCall className="h-3.5 w-3.5 text-coral" />
+            <i className="fa-solid fa-phone text-xs text-coral"></i>
             <span>{SITE.phone}</span>
           </a>
 
@@ -124,7 +123,7 @@ export function Header() {
             className="relative grid h-11 w-11 place-items-center rounded-full bg-cream text-brown-dark ring-1 ring-border/80 transition-all duration-300 hover:bg-cream-soft hover:scale-105 active:scale-95 shadow-sm"
           >
             <span key={pulseKey} className="cart-pulse grid place-items-center">
-              <ShoppingBag className="h-5 w-5 text-brown-dark" />
+              <i className="fa-solid fa-cart-shopping text-base text-brown-dark"></i>
             </span>
             {count > 0 && (
               <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-coral px-1 text-[11px] font-extrabold text-cream shadow-md shadow-coral/40 animate-bounce">
@@ -138,9 +137,9 @@ export function Header() {
             href={buildWhatsAppUrl("Bonjour, je souhaite commander.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-coral to-coral-dark px-5 py-2.5 font-display text-xs font-bold text-cream shadow-lg shadow-coral/25 transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 sm:inline-flex"
+            className="hidden shrink-0 items-center gap-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 px-5 py-2.5 font-display text-xs font-bold text-cream shadow-lg shadow-emerald-600/25 transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 sm:inline-flex"
           >
-            <Sparkles className="h-3.5 w-3.5" />
+            <i className="fa-brands fa-whatsapp text-sm"></i>
             <span>Commander maintenant</span>
           </a>
 
@@ -150,7 +149,7 @@ export function Header() {
             aria-label="Menu"
             className="grid h-11 w-11 place-items-center rounded-full bg-cream text-brown-dark ring-1 ring-border md:hidden"
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? <i className="fa-solid fa-xmark text-base"></i> : <i className="fa-solid fa-bars text-base"></i>}
           </button>
         </div>
       </div>
@@ -169,7 +168,7 @@ export function Header() {
                 className="flex items-center justify-between rounded-2xl px-4 py-3 text-left text-sm font-bold text-brown-dark transition-colors hover:bg-cream"
               >
                 <span>{n.label}</span>
-                <span className="text-coral">→</span>
+                <i className="fa-solid fa-arrow-right text-xs text-coral"></i>
               </button>
             ))}
             <a

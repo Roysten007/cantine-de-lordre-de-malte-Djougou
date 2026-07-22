@@ -1,28 +1,24 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { CartProvider, useCart, formatFCFA, type Dish } from "@/lib/cart";
 import {
-  ChefHat,
-  Sparkles,
-  Truck,
-  Users,
-  ChevronDown,
-  Phone,
-  MapPin,
-  Clock,
-  Star,
-  ArrowRight,
-  Calendar,
-  Maximize2,
-  X,
-  HeartHandshake,
-  ShoppingBag,
-} from "lucide-react";
-import { CartProvider, useCart, formatFCFA } from "@/lib/cart";
-import { MENU, CATEGORIES, DAILY_MENU_IDS, WEEK_MENU } from "@/data/menu";
+  MENU,
+  CATEGORIES,
+  COMING_SOON_CATEGORIES,
+  DAYS_OF_WEEK,
+  WEEKLY_SCHEDULE,
+  BREAKFAST_MENU,
+  LUNCH_MENU,
+  DINNER_MENU,
+  getTodayName,
+  type DayOfWeek,
+} from "@/data/menu";
 import { SITE, buildWhatsAppUrl } from "@/lib/site-config";
 import { Header } from "@/components/anifath/Header";
 import { CartPanel } from "@/components/anifath/CartPanel";
 import { DishCard } from "@/components/anifath/DishCard";
+import { SauceSelectorModal } from "@/components/anifath/SauceSelectorModal";
+import { SaucesSection } from "@/components/anifath/SaucesSection";
 import { useReveal } from "@/hooks/use-reveal";
 import heroDishFallback from "@/assets/hero-dish.jpg";
 import kitchen1 from "@/assets/kitchen-1.jpg";
@@ -62,9 +58,9 @@ function HomeContent() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setFadeOut(true);
-      const hideTimer = setTimeout(() => setLoading(false), 700);
+      const hideTimer = setTimeout(() => setLoading(false), 500);
       return () => clearTimeout(hideTimer);
-    }, 2200);
+    }, 1200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -104,6 +100,7 @@ function HomeContent() {
         <Hero />
         <TrustBar />
         <MenuSection />
+        <SaucesSection />
         <Gallery />
         <Offer />
         <HowToOrder />
@@ -115,13 +112,13 @@ function HomeContent() {
       <Footer />
       <CartPanel />
 
-      {/* Bouton de commande flottant en bas à droite (visible toujours ou quand il y a des articles, montrons-le toujours pour faciliter l'accès comme demandé) */}
+      {/* Bouton de commande flottant en bas à droite */}
       <button
         onClick={() => setOpen(true)}
         aria-label="Voir la commande"
         className="fixed bottom-6 right-6 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-coral text-cream shadow-2xl shadow-coral/45 ring-4 ring-background transition-all duration-300 hover:scale-110 hover:bg-coral-dark active:scale-95 group"
       >
-        <ShoppingBag className="h-7 w-7 text-cream transition-transform group-hover:rotate-6" />
+        <i className="fa-solid fa-cart-shopping text-xl text-cream transition-transform group-hover:rotate-6"></i>
         {count > 0 && (
           <span className="absolute -right-1.5 -top-1.5 flex h-6 min-w-6 items-center justify-center rounded-full bg-brown-dark px-1.5 text-[10px] font-black text-cream shadow-lg ring-2 ring-background animate-bounce">
             {count}
@@ -155,14 +152,14 @@ function EyebrowTitle({ eyebrow, title, sub }: { eyebrow?: string; title: string
     <div className="mx-auto max-w-2xl text-center">
       {eyebrow && (
         <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-coral/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-coral ring-1 ring-coral/20">
-          <Sparkles className="h-3.5 w-3.5" />
+          <i className="fa-solid fa-wand-magic-sparkles text-xs"></i>
           {eyebrow}
         </span>
       )}
       <h2 className="font-display text-3xl font-black leading-tight text-brown-dark sm:text-4xl md:text-5xl">
         {title}
       </h2>
-      {sub && <p className="mt-4 text-base font-medium text-brown-dark/70 sm:text-lg">{sub}</p>}
+      {sub && <p className="mt-4 text-base font-medium text-brown-dark/75 sm:text-lg">{sub}</p>}
     </div>
   );
 }
@@ -178,15 +175,14 @@ function Hero() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Liste de sélection de plats pour le défilement automatique (effet vidéo montrant la diversité)
   const slideshowDishes = useMemo(() => {
-    const ids = ["riz-gras", "pate-rouge", "igname", "attieke", "poulet-frites", "gombo"];
-    return MENU.filter((d) => ids.includes(d.id));
+    const ids = ["riz-dej", "pate-noire-dej", "monyo-dej", "fonio", "salade-dej", "spaghetti-dej", "attieke-dej"];
+    const list = MENU.filter((d) => ids.includes(d.id));
+    return list.length > 0 ? list : MENU;
   }, []);
 
   const [slideIndex, setSlideIndex] = useState(0);
 
-  // Effet de défilement automatique simulant une boucle vidéo de présentation des plats
   useEffect(() => {
     const timer = setInterval(() => {
       setSlideIndex((prev) => (prev + 1) % slideshowDishes.length);
@@ -235,13 +231,13 @@ function Hero() {
               className="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-coral to-coral-dark px-7 py-4 font-display text-sm font-bold text-cream shadow-xl shadow-coral/30 transition-all duration-300 hover:shadow-2xl hover:scale-105 active:scale-95"
             >
               <span>Voir le menu du jour</span>
-              <ArrowRight className="h-4 w-4" />
+              <i className="fa-solid fa-arrow-right text-xs"></i>
             </a>
             <button
               onClick={() => setOpen(true)}
               className="inline-flex items-center gap-2.5 rounded-full bg-background px-6 py-4 font-display text-sm font-bold text-brown-dark ring-1 ring-border shadow-sm transition-all duration-300 hover:bg-cream-soft hover:shadow-md active:scale-95"
             >
-              <ShoppingBag className="h-4 w-4 text-coral" />
+              <i className="fa-solid fa-cart-shopping text-xs text-coral"></i>
               <span>Commander maintenant</span>
             </button>
           </div>
@@ -261,7 +257,7 @@ function Hero() {
           </dl>
         </div>
 
-        {/* Right Column: Carrousel automatique cinématique simulant la vidéo de défilement des plats */}
+        {/* Right Column: Carrousel automatique cinématique */}
         <div className="relative flex justify-center w-full">
           <div
             className="animate-float relative aspect-square w-full max-w-md overflow-hidden rounded-[2.5rem] shadow-2xl shadow-coral/25 ring-8 ring-background/90 sm:aspect-[4/5] sm:max-w-lg animate-in fade-in duration-1000"
@@ -294,7 +290,7 @@ function Hero() {
           {/* Floating Card 1: Active Dish name */}
           <div className="animate-float-delayed absolute -bottom-6 -left-4 hidden items-center gap-3 rounded-2xl bg-background/95 p-4 shadow-xl ring-1 ring-border/80 backdrop-blur-xl sm:flex transition-all duration-500">
             <div className="grid h-11 w-11 place-items-center rounded-xl bg-amber/20 text-amber">
-              <ChefHat className="h-6 w-6" />
+              <i className="fa-solid fa-utensils text-lg"></i>
             </div>
             <div className="min-w-[125px]">
               <p className="text-[11px] font-bold uppercase tracking-wider text-brown-dark/60">Spécialité Maison</p>
@@ -317,10 +313,10 @@ function Hero() {
 /* ---------- Trust Bar ---------- */
 function TrustBar() {
   const items = [
-    { icon: ChefHat, text: "Fait maison, chaque jour" },
-    { icon: Sparkles, text: "Prêt en quelques clics, sans file d'attente" },
-    { icon: Truck, text: "Livraison en chambre disponible" },
-    { icon: Users, text: "Ouvert à tous — personnel, patients, visiteurs" },
+    { iconClass: "fa-solid fa-utensils", text: "Fait maison, chaque jour" },
+    { iconClass: "fa-solid fa-wand-magic-sparkles", text: "Prêt en quelques clics, sans file d'attente" },
+    { iconClass: "fa-solid fa-truck-fast", text: "Livraison en chambre disponible" },
+    { iconClass: "fa-solid fa-users", text: "Ouvert à tous — personnel, patients, visiteurs" },
   ];
   return (
     <Section className="bg-brown-dark py-12 text-cream shadow-inner">
@@ -328,7 +324,7 @@ function TrustBar() {
         {items.map((it) => (
           <div key={it.text} className="flex items-center gap-4 rounded-2xl bg-cream/5 p-4 ring-1 ring-cream/10 backdrop-blur-sm transition-transform duration-300 hover:scale-102">
             <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-coral/25 text-amber">
-              <it.icon className="h-6 w-6" />
+              <i className={`${it.iconClass} text-lg`}></i>
             </div>
             <p className="min-w-0 font-display text-sm font-bold leading-snug text-cream/90">{it.text}</p>
           </div>
@@ -338,109 +334,359 @@ function TrustBar() {
   );
 }
 
-/* ---------- Menu Section ---------- */
+/* ---------- Menu Section (Structure 3 Niveaux & Copywriting Ultime) ---------- */
 function MenuSection() {
-  const [cat, setCat] = useState<string>("Plats du jour");
-  const [weekOpen, setWeekOpen] = useState(false);
-  const daily = MENU.filter((d) => DAILY_MENU_IDS.includes(d.id));
-  const filtered = useMemo(
-    () => MENU.filter((d) => (cat === "Entrées" ? d.category === "Plats du jour" : d.category === cat)),
-    [cat],
-  );
+  const todayName = useMemo(() => getTodayName(), []);
+  const [selectedDay, setSelectedDay] = useState<DayOfWeek>(todayName);
+  const [viewMode, setViewMode] = useState<"today" | "week" | "catalog">("today");
+  const [cat, setCat] = useState<string>("Tous les plats");
+  const [sauceModalDish, setSauceModalDish] = useState<Dish | null>(null);
+  const { add } = useCart();
+
+  const daySchedule = WEEKLY_SCHEDULE[selectedDay];
+
+  // Plats du Petit déjeuner avec tag suggestion si recommandé ce jour-là
+  const breakfastDishes = useMemo(() => {
+    return BREAKFAST_MENU.map((dish) => {
+      const isSuggested = daySchedule.suggestedBreakfastNames.some((n) =>
+        dish.name.toLowerCase().includes(n.toLowerCase()),
+      );
+      return {
+        ...dish,
+        isBreakfastSuggestion: isSuggested,
+      };
+    });
+  }, [daySchedule]);
+
+  // Carte complète toujours disponible
+  const catalogDishes = useMemo(() => {
+    if (cat === "Petit déjeuner") return breakfastDishes;
+    if (cat === "Déjeuner") return LUNCH_MENU;
+    if (cat === "Dîner") return DINNER_MENU;
+    return [...breakfastDishes, ...LUNCH_MENU, ...DINNER_MENU];
+  }, [cat, breakfastDishes]);
+
+  const isComingSoon = (COMING_SOON_CATEGORIES as readonly string[]).includes(cat);
 
   return (
     <Section id="menu" className="py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        {/* En-tête de section avec Copywriting Ultime */}
         <EyebrowTitle
-          eyebrow="Notre carte"
-          title="Le menu du jour"
-          sub="Nouveau menu chaque jour. Ajoute tes plats, ton panier se remplit tout seul."
+          eyebrow="Carte & Planning"
+          title="Le menu"
+          sub="Chaque jour, on te propose une suggestion. Mais tous nos plats restent disponibles, tous les jours — choisis simplement ce qui te fait envie."
         />
 
-        {/* Highlight Banner du jour */}
-        <div className="mt-12 overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-coral via-coral-dark to-brown-dark/95 p-6 text-cream shadow-2xl shadow-coral/20 sm:p-10">
-          <div className="flex flex-wrap items-center justify-between gap-6">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-cream/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-cream backdrop-blur-md">
-                <Sparkles className="h-3.5 w-3.5 text-amber" />
-                Menu du jour fraîchement préparé
-              </span>
-              <h3 className="mt-2 font-display text-2xl font-black text-cream sm:text-3xl">
-                À la une aujourd'hui à La Cantine
-              </h3>
-            </div>
-            <button
-              onClick={() => setWeekOpen((v) => !v)}
-              className="inline-flex items-center gap-2 rounded-full bg-cream px-5 py-3 font-display text-xs font-bold text-coral shadow-md transition-all duration-300 hover:bg-background hover:scale-105 active:scale-95"
-            >
-              <Calendar className="h-4 w-4" />
-              <span>Voir le planning de la semaine</span>
-            </button>
-          </div>
+        {/* Barre de navigation / bascule entre les vues du Menu */}
+        <div className="mt-10 flex flex-wrap justify-center items-center gap-3">
+          <button
+            onClick={() => setViewMode("today")}
+            className={`inline-flex items-center gap-2 rounded-full px-6 py-3 font-display text-xs font-black transition-all ${
+              viewMode === "today"
+                ? "bg-coral text-cream shadow-lg shadow-coral/30 scale-105 ring-2 ring-coral"
+                : "bg-cream text-brown-dark ring-1 ring-border/80 hover:bg-cream-soft"
+            }`}
+          >
+            <i className="fa-solid fa-star text-xs"></i>
+            <span>Suggestion du jour ({selectedDay})</span>
+          </button>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {daily.map((d) => (
-              <div key={d.id} className="group rounded-2xl bg-cream/10 p-4 backdrop-blur-md ring-1 ring-cream/20 transition-all hover:bg-cream/20">
-                <p className="font-display text-base font-extrabold text-cream">{d.name}</p>
-                <p className="mt-1 font-display text-sm font-bold text-amber">{formatFCFA(d.price)}</p>
-              </div>
-            ))}
-          </div>
+          <button
+            onClick={() => setViewMode("week")}
+            className={`inline-flex items-center gap-2 rounded-full px-6 py-3 font-display text-xs font-black transition-all ${
+              viewMode === "week"
+                ? "bg-brown-dark text-cream shadow-lg shadow-brown-dark/30 scale-105 ring-2 ring-brown-dark"
+                : "bg-cream text-brown-dark ring-1 ring-border/80 hover:bg-cream-soft"
+            }`}
+          >
+            <i className="fa-solid fa-calendar-days text-xs"></i>
+            <span>Voir toute la semaine</span>
+          </button>
 
-          {weekOpen && (
-            <div className="mt-6 grid gap-4 rounded-3xl bg-brown-dark/60 p-6 backdrop-blur-md ring-1 ring-cream/15 animate-in fade-in slide-in-from-top-4 duration-400 sm:grid-cols-2 lg:grid-cols-4">
-              {WEEK_MENU.map((w) => (
-                <div key={w.day} className="rounded-2xl bg-cream/5 p-4 ring-1 ring-cream/10">
-                  <p className="font-display text-xs font-black uppercase tracking-wider text-amber">
-                    {w.day}
+          <button
+            onClick={() => setViewMode("catalog")}
+            className={`inline-flex items-center gap-2 rounded-full px-6 py-3 font-display text-xs font-black transition-all ${
+              viewMode === "catalog"
+                ? "bg-amber text-brown-dark shadow-lg ring-2 ring-amber scale-105"
+                : "bg-cream text-brown-dark ring-1 ring-border/80 hover:bg-cream-soft"
+            }`}
+          >
+            <i className="fa-solid fa-utensils text-xs"></i>
+            <span>Voir tous nos plats</span>
+          </button>
+        </div>
+
+        {/* NIVEAU 1 : SUGGESTION DU JOUR (Vue par défaut) */}
+        {viewMode === "today" && (
+          <div className="mt-10 space-y-12 animate-in fade-in duration-400">
+            {/* Banner info jour */}
+            <div className="overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-coral via-coral-dark to-brown-dark/95 p-6 text-cream shadow-xl sm:p-10">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-cream/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-cream backdrop-blur-md">
+                    <i className="fa-solid fa-fire text-amber text-xs"></i>
+                    Planning du {selectedDay} {selectedDay === todayName ? "(Aujourd'hui)" : ""}
+                  </span>
+                  <h3 className="mt-2 font-display text-2xl font-black text-cream sm:text-3xl">
+                    Suggestion du jour
+                  </h3>
+                  <p className="mt-2 text-xs font-medium text-cream/90 max-w-xl">
+                    Ce qu'on te recommande aujourd'hui — mais libre à toi de piocher ailleurs dans la carte complète.
                   </p>
-                  <ul className="mt-3 space-y-1.5 text-xs font-medium text-cream/90">
-                    {w.dishes.map((n) => (
-                      <li key={n} className="flex items-center gap-1.5">
-                        <span className="text-amber">•</span> {n}
-                      </li>
-                    ))}
-                  </ul>
                 </div>
+
+                <div className="flex gap-2.5">
+                  <button
+                    onClick={() => setViewMode("week")}
+                    className="inline-flex items-center gap-2 rounded-full bg-cream/20 px-4 py-2.5 text-xs font-bold text-cream hover:bg-cream/30 transition-all"
+                  >
+                    <i className="fa-solid fa-calendar-days text-xs"></i>
+                    <span>Toute la semaine</span>
+                  </button>
+                  <button
+                    onClick={() => setViewMode("catalog")}
+                    className="inline-flex items-center gap-2 rounded-full bg-cream px-5 py-2.5 text-xs font-black text-coral hover:bg-background transition-all shadow-md"
+                  >
+                    <span>Voir tous nos plats</span>
+                    <i className="fa-solid fa-arrow-right text-xs"></i>
+                  </button>
+                </div>
+              </div>
+
+              {/* Sélecteur rapide des jours de la semaine */}
+              <div className="mt-6 flex flex-wrap gap-2 pt-4 border-t border-cream/20">
+                {DAYS_OF_WEEK.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setSelectedDay(d)}
+                    className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-black transition-all ${
+                      selectedDay === d
+                        ? "bg-amber text-brown-dark shadow-md scale-105"
+                        : "bg-cream/15 text-cream hover:bg-cream/30"
+                    }`}
+                  >
+                    <span>{d}</span>
+                    {d === todayName && (
+                      <span className="rounded-full bg-coral px-1.5 py-0.5 text-[9px] font-black text-cream">
+                        Auj.
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Plats suggérés pour aujourd'hui (3 sous-sections) */}
+            <div className="space-y-10">
+              {/* Petit Déjeuner */}
+              <div>
+                <div className="mb-4 flex items-center justify-between border-b border-border/60 pb-3">
+                  <h4 className="font-display text-xl font-black text-brown-dark flex items-center gap-2">
+                    <span className="grid h-8 w-8 place-items-center rounded-full bg-coral/10 text-coral text-sm">☕</span>
+                    Petit déjeuner (Suggéré : {daySchedule.suggestedBreakfastNames.join(" + ")})
+                  </h4>
+                  <span className="text-xs font-bold text-brown-dark/60">5 options 7j/7</span>
+                </div>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+                  {breakfastDishes.map((d) => (
+                    <DishCard key={d.id} dish={d} onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Déjeuner */}
+              <div>
+                <div className="mb-4 flex items-center justify-between border-b border-border/60 pb-3">
+                  <h4 className="font-display text-xl font-black text-brown-dark flex items-center gap-2">
+                    <span className="grid h-8 w-8 place-items-center rounded-full bg-amber/20 text-coral text-sm">☀️</span>
+                    Déjeuner (Suggéré du jour)
+                  </h4>
+                  <button onClick={() => setViewMode("catalog")} className="text-xs font-bold text-coral hover:underline">
+                    Voir toute la carte Déjeuner →
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {daySchedule.lunch.map((d, idx) => (
+                    <DishCard key={d.id} dish={d} big={idx === 0} onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Dîner */}
+              <div>
+                <div className="mb-4 flex items-center justify-between border-b border-border/60 pb-3">
+                  <h4 className="font-display text-xl font-black text-brown-dark flex items-center gap-2">
+                    <span className="grid h-8 w-8 place-items-center rounded-full bg-brown-dark/10 text-brown-dark text-sm">🌙</span>
+                    Dîner (Suggéré du jour)
+                  </h4>
+                  <button onClick={() => setViewMode("catalog")} className="text-xs font-bold text-coral hover:underline">
+                    Voir toute la carte Dîner →
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {daySchedule.dinner.map((d) => (
+                    <DishCard key={d.id} dish={d} onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* NIVEAU 2 : TOUTE LA SEMAINE (Vue Planning 7 Jours) */}
+        {viewMode === "week" && (
+          <div className="mt-10 animate-in fade-in duration-400 space-y-8">
+            <div className="text-center max-w-xl mx-auto">
+              <h3 className="font-display text-2xl font-black text-brown-dark">Planning de la semaine</h3>
+              <p className="mt-1 text-xs font-medium text-brown-dark/70">
+                Découvre nos suggestions pour chaque jour. Clique sur un jour pour voir son détail.
+              </p>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {DAYS_OF_WEEK.map((dayName) => {
+                const sched = WEEKLY_SCHEDULE[dayName];
+                const isToday = dayName === todayName;
+                return (
+                  <div
+                    key={dayName}
+                    onClick={() => {
+                      setSelectedDay(dayName);
+                      setViewMode("today");
+                    }}
+                    className={`cursor-pointer rounded-[2rem] p-6 ring-1 transition-all duration-300 hover:scale-103 ${
+                      isToday
+                        ? "bg-gradient-to-br from-coral to-coral-dark text-cream ring-coral shadow-lg"
+                        : "bg-card ring-border/80 hover:ring-coral/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between border-b pb-3 border-current/20">
+                      <h4 className={`font-display text-lg font-black ${isToday ? "text-amber" : "text-brown-dark"}`}>
+                        {dayName}
+                      </h4>
+                      {isToday && (
+                        <span className="rounded-full bg-amber px-2 py-0.5 text-[9px] font-black text-brown-dark">
+                          Aujourd'hui
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mt-4 space-y-3 text-xs">
+                      <div>
+                        <span className={`block text-[10px] font-extrabold uppercase ${isToday ? "text-amber/90" : "text-coral"}`}>
+                          Petit déjeuner :
+                        </span>
+                        <p className="font-semibold">{sched.suggestedBreakfastNames.join(" + ")}</p>
+                      </div>
+
+                      <div>
+                        <span className={`block text-[10px] font-extrabold uppercase ${isToday ? "text-amber/90" : "text-coral"}`}>
+                          Déjeuner suggéré :
+                        </span>
+                        <p className="font-semibold">{sched.suggestedLunchNames.join(" · ")}</p>
+                      </div>
+
+                      <div>
+                        <span className={`block text-[10px] font-extrabold uppercase ${isToday ? "text-amber/90" : "text-coral"}`}>
+                          Dîner suggéré :
+                        </span>
+                        <p className="font-semibold">{sched.suggestedDinnerNames.join(" · ")}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 pt-3 border-t border-current/20 flex items-center justify-between text-[11px] font-bold">
+                      <span>Voir ce jour</span>
+                      <i className="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* NIVEAU 3 & CARTE COMPLÈTE (Tous nos plats) */}
+        {viewMode === "catalog" && (
+          <div className="mt-10 animate-in fade-in duration-400">
+            {/* Category Filter Tabs */}
+            <div className="flex flex-wrap justify-center gap-2.5">
+              {CATEGORIES.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setCat(c)}
+                  className={`rounded-full px-5 py-2.5 font-display text-xs font-bold transition-all duration-300 ${
+                    cat === c
+                      ? "bg-brown-dark text-cream shadow-lg shadow-brown-dark/20 scale-105"
+                      : "bg-cream text-brown-dark ring-1 ring-border/80 hover:bg-cream-soft hover:scale-102"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+
+              {COMING_SOON_CATEGORIES.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setCat(c)}
+                  className={`relative rounded-full px-5 py-2.5 font-display text-xs font-bold transition-all duration-300 ${
+                    cat === c
+                      ? "bg-amber/90 text-brown-dark shadow-lg ring-2 ring-amber scale-105"
+                      : "bg-cream/40 text-brown-dark/70 ring-1 ring-border/50 hover:bg-cream-soft hover:text-brown-dark"
+                  }`}
+                >
+                  <span>{c}</span>
+                  <span className="ml-1.5 rounded-full bg-coral/15 px-1.5 py-0.5 text-[9px] font-black uppercase text-coral">
+                    À venir
+                  </span>
+                </button>
               ))}
             </div>
-          )}
-        </div>
 
-        {/* Category Tabs */}
-        <div className="mt-12 flex flex-wrap justify-center gap-2.5">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCat(c)}
-              className={`rounded-full px-5 py-2.5 font-display text-xs font-bold transition-all duration-300 ${
-                cat === c
-                  ? "bg-brown-dark text-cream shadow-lg shadow-brown-dark/20 scale-105"
-                  : "bg-cream text-brown-dark ring-1 ring-border/80 hover:bg-cream-soft hover:scale-102"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-
-        {/* Dishes Grid */}
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {filtered.map((d, idx) => (
-            <DishCard key={d.id} dish={d} big={cat === "Plats du jour" && idx === 0} />
-          ))}
-        </div>
-
-        {/* Voir toute la carte Button */}
-        <div className="mt-12 text-center">
-          <a
-            href="#menu"
-            className="inline-flex items-center gap-2 rounded-full bg-cream px-8 py-3.5 font-display text-xs font-bold text-brown-dark ring-1 ring-border transition-all hover:bg-cream-soft hover:scale-102"
-          >
-            <span>Voir toute la carte</span>
-          </a>
-        </div>
+            {/* Dishes Grid */}
+            {isComingSoon ? (
+              <div className="mt-10 rounded-[2.5rem] bg-gradient-to-br from-cream via-amber/10 to-cream p-8 sm:p-12 text-center ring-1 ring-border/80 max-w-2xl mx-auto shadow-sm">
+                <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-3xl bg-amber/20 text-coral">
+                  <i className="fa-solid fa-wand-magic-sparkles text-2xl"></i>
+                </div>
+                <h3 className="font-display text-2xl font-black text-brown-dark">
+                  {cat} — Bientôt disponible !
+                </h3>
+                <p className="mt-3 text-sm font-medium leading-relaxed text-brown-dark/75">
+                  Les tarifs et recettes pour les pâtisseries, glaces et boissons seront intégrés dès réception de la fiche client définitive.
+                </p>
+                <div className="mt-6 flex justify-center">
+                  <button
+                    onClick={() => setCat("Tous les plats")}
+                    className="rounded-full bg-brown-dark px-6 py-3 font-display text-xs font-bold text-cream hover:bg-coral transition-all shadow-md"
+                  >
+                    Retour à la carte complète
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {catalogDishes.map((d, idx) => (
+                  <DishCard
+                    key={d.id}
+                    dish={d}
+                    big={idx === 0}
+                    onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Sauce Selection Modal */}
+      <SauceSelectorModal
+        dish={sauceModalDish}
+        isOpen={sauceModalDish !== null}
+        onClose={() => setSauceModalDish(null)}
+        onConfirm={(dish, sauce) => add(dish, sauce)}
+      />
     </Section>
   );
 }
@@ -488,7 +734,7 @@ function Gallery() {
                     <p className="text-xs font-medium text-cream/80">{im.desc}</p>
                   </div>
                   <div className="grid h-9 w-9 place-items-center rounded-full bg-cream/20 text-cream backdrop-blur-md transition-transform duration-300 group-hover:scale-110">
-                    <Maximize2 className="h-4 w-4" />
+                    <i className="fa-solid fa-expand text-xs"></i>
                   </div>
                 </div>
               </div>
@@ -505,7 +751,7 @@ function Gallery() {
               onClick={() => setActiveModal(null)}
               className="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-brown-dark text-cream transition-transform hover:scale-110"
             >
-              <X className="h-5 w-5" />
+              <i className="fa-solid fa-xmark text-sm"></i>
             </button>
             <img
               src={imgs[activeModal].src}
@@ -525,8 +771,8 @@ function Gallery() {
 
 /* ---------- Offer Section ---------- */
 function Offer() {
-  const offer1 = MENU.find((d) => d.id === "poulet-frites")!;
-  const offer2 = MENU.find((d) => d.id === "attieke")!;
+  const offer1 = MENU.find((d) => d.id === "salade-dej") || MENU[0];
+  const offer2 = MENU.find((d) => d.id === "riz-dej") || MENU[1];
   const { add } = useCart();
 
   return (
@@ -549,7 +795,7 @@ function Offer() {
                 <div className="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center">
                   <div>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-coral px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-cream shadow-md shimmer-badge">
-                      <Sparkles className="h-3 w-3" />
+                      <i className="fa-solid fa-wand-magic-sparkles text-xs"></i>
                       {i === 0 ? "Offre Spéciale -15%" : "Menu Combo Express"}
                     </span>
 
@@ -573,7 +819,7 @@ function Offer() {
                       className="mt-6 inline-flex items-center gap-2 rounded-full bg-brown-dark px-6 py-3.5 font-display text-xs font-bold text-cream shadow-lg transition-all duration-300 hover:bg-coral hover:scale-105 active:scale-95"
                     >
                       <span>J'en profite</span>
-                      <ArrowRight className="h-4 w-4" />
+                      <i className="fa-solid fa-arrow-right text-xs"></i>
                     </button>
                   </div>
 
@@ -652,7 +898,7 @@ function Testimonials() {
               <div>
                 <div className="flex gap-1 text-amber">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber text-amber" />
+                    <i key={i} className="fa-solid fa-star text-amber text-xs"></i>
                   ))}
                 </div>
                 <blockquote className="mt-4 text-sm font-medium leading-relaxed text-brown-dark/85">
@@ -715,7 +961,7 @@ function FAQ() {
                       isOpen ? "rotate-180 bg-coral text-cream" : "bg-cream text-brown-dark"
                     }`}
                   >
-                    <ChevronDown className="h-5 w-5" />
+                    <i className="fa-solid fa-chevron-down text-sm"></i>
                   </span>
                 </button>
                 {isOpen && (
@@ -744,7 +990,7 @@ function About() {
         </div>
         <div>
           <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-coral/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-coral">
-            <HeartHandshake className="h-3.5 w-3.5" />
+            <i className="fa-solid fa-hand-holding-heart text-xs"></i>
             Notre Passion
           </span>
           <h2 className="font-display text-3xl font-black leading-tight text-brown-dark sm:text-4xl md:text-5xl">
@@ -788,14 +1034,14 @@ function Contact() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: Clock, title: "Horaires", lines: [SITE.hours, "Service continu 7j/7"] },
-            { icon: MapPin, title: "Localisation", lines: [SITE.address, "Djougou, Bénin"] },
-            { icon: Truck, title: "Zones desservies", lines: ["Chambres d'hôpital", "Bureaux et ville de Djougou"] },
-            { icon: Phone, title: "Contact direct", lines: [`WhatsApp : ${SITE.whatsapp.substring(3)}`, `Appel : ${SITE.phone.replace("+229 ", "")}`] },
+            { iconClass: "fa-solid fa-clock", title: "Horaires", lines: [SITE.hours, "Service continu 7j/7"] },
+            { iconClass: "fa-solid fa-location-dot", title: "Localisation", lines: [SITE.address, "Djougou, Bénin"] },
+            { iconClass: "fa-solid fa-truck-fast", title: "Zones desservies", lines: ["Chambres d'hôpital", "Bureaux et ville de Djougou"] },
+            { iconClass: "fa-solid fa-phone", title: "Contact direct", lines: [`WhatsApp : ${SITE.whatsapp.substring(3)}`, `Appel : ${SITE.phone.replace("+229 ", "")}`] },
           ].map((b) => (
             <div key={b.title} className="rounded-[2rem] bg-cream/5 p-6 ring-1 ring-cream/10 backdrop-blur-md transition-all duration-300 hover:bg-cream/10">
               <div className="grid h-12 w-12 place-items-center rounded-2xl bg-coral text-cream shadow-md">
-                <b.icon className="h-6 w-6" />
+                <i className={`${b.iconClass} text-lg`}></i>
               </div>
               <h3 className="mt-5 font-display text-lg font-black text-cream">{b.title}</h3>
               <div className="mt-2 space-y-1 text-xs font-medium text-cream/75">
@@ -812,15 +1058,16 @@ function Contact() {
             href={buildWhatsAppUrl(`Bonjour, je souhaite passer une commande.`)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-coral to-amber px-8 py-4 font-display text-sm font-black text-cream shadow-xl shadow-coral/30 transition-all duration-300 hover:scale-105 active:scale-95"
+            className="inline-flex items-center gap-3 rounded-full bg-emerald-600 hover:bg-emerald-700 px-8 py-4 font-display text-sm font-black text-cream shadow-xl active:scale-95 transition-all"
           >
+            <i className="fa-brands fa-whatsapp text-lg"></i>
             <span>Écrire sur WhatsApp</span>
           </a>
           <a
             href={`tel:${SITE.phoneRaw}`}
             className="inline-flex items-center gap-2.5 rounded-full bg-cream px-8 py-4 font-display text-sm font-bold text-brown-dark shadow-md transition-all duration-300 hover:bg-cream-soft hover:scale-105 active:scale-95"
           >
-            <Phone className="h-4 w-4 text-coral" />
+            <i className="fa-solid fa-phone text-xs text-coral"></i>
             <span>Appeler {SITE.phone}</span>
           </a>
         </div>
@@ -846,15 +1093,17 @@ function Footer() {
               href={buildWhatsAppUrl(`Bonjour, je souhaite commander.`)}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-cream px-8 py-4 font-display text-sm font-extrabold text-coral shadow-lg transition-all duration-300 hover:bg-background hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-700 px-8 py-4 font-display text-sm font-extrabold text-cream shadow-lg transition-all duration-300 hover:scale-105"
             >
-              Commander sur WhatsApp
+              <i className="fa-brands fa-whatsapp text-lg"></i>
+              <span>Commander sur WhatsApp</span>
             </a>
             <a
               href={`tel:${SITE.phoneRaw}`}
-              className="rounded-full bg-brown-dark px-8 py-4 font-display text-sm font-extrabold text-cream shadow-lg ring-1 ring-cream/20 transition-all duration-300 hover:bg-brown-dark/80 hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-full bg-brown-dark px-8 py-4 font-display text-sm font-extrabold text-cream shadow-lg ring-1 ring-cream/20 transition-all duration-300 hover:bg-brown-dark/80 hover:scale-105"
             >
-              Appeler directement
+              <i className="fa-solid fa-phone text-xs text-amber"></i>
+              <span>Appeler directement</span>
             </a>
           </div>
         </div>
@@ -865,6 +1114,7 @@ function Footer() {
           <div className="flex gap-4">
             <a href="#hero" className="hover:text-coral transition-colors">Accueil</a>
             <a href="#menu" className="hover:text-coral transition-colors">Menu</a>
+            <a href="#sauces" className="hover:text-coral transition-colors">Nos sauces</a>
             <a href="#contact" className="hover:text-coral transition-colors">Contact</a>
           </div>
         </div>

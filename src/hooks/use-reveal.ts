@@ -5,6 +5,12 @@ export function useReveal<T extends HTMLElement>() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      el.classList.add("reveal-in");
+      return;
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -14,10 +20,19 @@ export function useReveal<T extends HTMLElement>() {
           }
         });
       },
-      { threshold: 0.15 },
+      { threshold: 0.05, rootMargin: "80px" },
     );
     io.observe(el);
-    return () => io.disconnect();
+
+    // Timeout de sécurité : si le défilement ne s'est pas encore produit ou si la vue est directe
+    const safetyTimer = setTimeout(() => {
+      if (el) el.classList.add("reveal-in");
+    }, 400);
+
+    return () => {
+      io.disconnect();
+      clearTimeout(safetyTimer);
+    };
   }, []);
   return ref;
 }
