@@ -21,7 +21,8 @@ import sauceCrincrin from "@/assets/sauce-crincrin.jpg";
 import sauceGombo from "@/assets/sauce-gombo.jpg";
 import sauceLegumes from "@/assets/sauce-legumes.jpg";
 
-// ── Fallback (items sans photo réelle) ────────────────────────
+// ── Fallback & Spécialités ─────────────────────────────────────
+import fonio from "@/assets/dish-fonio.jpg";
 import rizGras from "@/assets/dish-riz-gras.jpg";
 
 // ── Pâtisserie & Glaces ───────────────────────────────────────
@@ -121,7 +122,7 @@ export const BREAKFAST_MENU: Dish[] = [
   { id: "sandwich", name: "Sandwich", price: 600, category: "Petit déjeuner", image: sandwich, tag: "Express" },
   { id: "avocat-oeuf", name: "Avocat + œuf", price: 600, category: "Petit déjeuner", image: avocat, tag: "Équilibré" },
   { id: "the", name: "Thé", price: 300, category: "Petit déjeuner", image: the, tag: "Chaud" },
-  { id: "fonio", name: "Fonio", price: 600, category: "Petit déjeuner", image: rizGras, featured: true, tag: "Spécialité locale" },
+  { id: "fonio", name: "Fonio", price: 600, category: "Petit déjeuner", image: fonio, featured: true, tag: "Spécialité locale" },
 ];
 
 // ── Déjeuner : Carte complète toujours disponible ─────────────
