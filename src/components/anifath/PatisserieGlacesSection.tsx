@@ -2,38 +2,25 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { PATISSERIE_GLACES_ITEMS } from "@/data/menu";
 import { useReveal } from "@/hooks/use-reveal";
 
-/* ── Carousel card ─────────────────────────────────────────────── */
+/* ── Pure Photo Card (Sans texte ni type) ───────────────────────── */
 function PGCard({ item }: { item: (typeof PATISSERIE_GLACES_ITEMS)[number] }) {
   return (
-    <div className="group relative flex-shrink-0 w-56 sm:w-64 overflow-hidden rounded-[2rem] shadow-md ring-1 ring-border/80 bg-card transition-transform duration-300 hover:scale-[1.03] hover:shadow-xl">
-      {/* Photo */}
-      <div className="relative aspect-square overflow-hidden">
+    <div className="group relative flex-shrink-0 w-64 sm:w-72 md:w-80 overflow-hidden rounded-[2.5rem] shadow-lg ring-1 ring-border/80 bg-card transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:ring-coral/40">
+      <div className="relative aspect-[3/4] overflow-hidden">
         <img
           src={item.image}
-          alt={item.name}
+          alt="Pâtisserie & Glaces"
           loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
         />
-        {/* Gradient overlay for name */}
-        <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/75 via-transparent to-transparent" />
-
-        {/* Category badge */}
-        <span className="absolute top-3 left-3 rounded-full bg-background/85 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-brown-dark backdrop-blur-md">
-          {item.category === "Pâtisserie" ? "🥐" : "🍦"} {item.category}
-        </span>
-
-        {/* Product name overlay */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <p className="font-display text-base font-black text-cream drop-shadow-lg leading-tight">
-            {item.name}
-          </p>
-        </div>
+        {/* Subtle shine / highlight vignette on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/30 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
     </div>
   );
 }
 
-/* ── Pagination dots ───────────────────────────────────────────── */
+/* ── Pagination Dots ───────────────────────────────────────────── */
 function PaginationDots({
   total,
   active,
@@ -44,16 +31,16 @@ function PaginationDots({
   onDotClick: (i: number) => void;
 }) {
   return (
-    <div className="flex items-center justify-center gap-2 mt-6">
+    <div className="flex items-center justify-center gap-2.5 mt-8">
       {Array.from({ length: total }).map((_, i) => (
         <button
           key={i}
-          aria-label={`Aller à la douceur ${i + 1}`}
+          aria-label={`Photo ${i + 1}`}
           onClick={() => onDotClick(i)}
           className={`rounded-full transition-all duration-300 ${
             i === active
-              ? "w-6 h-2 bg-coral shadow-md shadow-coral/30"
-              : "w-2 h-2 bg-border hover:bg-brown-dark/40"
+              ? "w-8 h-2.5 bg-coral shadow-md shadow-coral/30"
+              : "w-2.5 h-2.5 bg-border hover:bg-brown-dark/40"
           }`}
         />
       ))}
@@ -73,8 +60,8 @@ export function PatisserieGlacesSection() {
     const track = trackRef.current;
     if (!track) return;
     const cardWidth = track.firstElementChild
-      ? (track.firstElementChild as HTMLElement).offsetWidth + 16 // gap-4 = 16px
-      : 240;
+      ? (track.firstElementChild as HTMLElement).offsetWidth + 20 // gap-5 = 20px
+      : 280;
     const scrolled = track.scrollLeft;
     const idx = Math.round(scrolled / cardWidth);
     setActiveIndex(Math.min(idx, items.length - 1));
@@ -92,8 +79,8 @@ export function PatisserieGlacesSection() {
     const track = trackRef.current;
     if (!track) return;
     const cardWidth = track.firstElementChild
-      ? (track.firstElementChild as HTMLElement).offsetWidth + 16
-      : 240;
+      ? (track.firstElementChild as HTMLElement).offsetWidth + 20
+      : 280;
     track.scrollTo({ left: idx * cardWidth, behavior: "smooth" });
     setActiveIndex(idx);
   }, []);
@@ -111,7 +98,7 @@ export function PatisserieGlacesSection() {
     <section
       id="patisserie-glaces"
       ref={ref}
-      className="reveal scroll-mt-24 py-20 sm:py-28 bg-gradient-to-b from-cream/40 to-background overflow-hidden"
+      className="reveal scroll-mt-24 py-20 sm:py-28 bg-gradient-to-b from-cream/40 via-background to-background overflow-hidden"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {/* Header */}
@@ -137,7 +124,7 @@ export function PatisserieGlacesSection() {
               onClick={() => scrollBy(-1)}
               disabled={activeIndex === 0}
               aria-label="Précédent"
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden sm:flex h-11 w-11 items-center justify-center rounded-full bg-background shadow-lg ring-1 ring-border/80 transition-all hover:bg-cream-soft hover:scale-110 disabled:opacity-30 disabled:pointer-events-none -translate-x-2"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden sm:flex h-12 w-12 items-center justify-center rounded-full bg-background/95 shadow-xl ring-1 ring-border/80 transition-all hover:bg-cream-soft hover:scale-110 disabled:opacity-30 disabled:pointer-events-none -translate-x-3"
             >
               <i className="fa-solid fa-chevron-left text-brown-dark text-sm"></i>
             </button>
@@ -145,7 +132,7 @@ export function PatisserieGlacesSection() {
             {/* Scrollable track */}
             <div
               ref={trackRef}
-              className="flex gap-4 overflow-x-auto scroll-smooth pb-4 px-1 snap-x snap-mandatory"
+              className="flex gap-5 overflow-x-auto scroll-smooth pb-6 pt-2 px-2 snap-x snap-mandatory"
               style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
@@ -163,7 +150,7 @@ export function PatisserieGlacesSection() {
               onClick={() => scrollBy(1)}
               disabled={activeIndex >= items.length - 1}
               aria-label="Suivant"
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden sm:flex h-11 w-11 items-center justify-center rounded-full bg-background shadow-lg ring-1 ring-border/80 transition-all hover:bg-cream-soft hover:scale-110 disabled:opacity-30 disabled:pointer-events-none translate-x-2"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden sm:flex h-12 w-12 items-center justify-center rounded-full bg-background/95 shadow-xl ring-1 ring-border/80 transition-all hover:bg-cream-soft hover:scale-110 disabled:opacity-30 disabled:pointer-events-none translate-x-3"
             >
               <i className="fa-solid fa-chevron-right text-brown-dark text-sm"></i>
             </button>

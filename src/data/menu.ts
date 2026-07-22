@@ -25,14 +25,10 @@ import sauceLegumes from "@/assets/sauce-legumes.jpg";
 import rizGras from "@/assets/dish-riz-gras.jpg";
 
 // ── Pâtisserie & Glaces ───────────────────────────────────────
-import pastryCroissant from "@/assets/pastry-croissant.jpg";
-import pastryPainChocolat from "@/assets/pastry-pain-chocolat.jpg";
-import pastryQuatreQuarts from "@/assets/pastry-quatre-quarts.jpg";
-import pastryBeignet from "@/assets/pastry-beignet.jpg";
-import iceCreamVanille from "@/assets/ice-cream-vanille.jpg";
-import iceCreamChocolat from "@/assets/ice-cream-chocolat.jpg";
-import iceCreamFraise from "@/assets/ice-cream-fraise.jpg";
-import iceCreamCoco from "@/assets/ice-cream-coco.jpg";
+import patisserie1 from "@/assets/patisserie-1.jpg";
+import patisserie2 from "@/assets/patisserie-2.jpg";
+import patisserie3 from "@/assets/patisserie-3.jpg";
+import patisserie4 from "@/assets/patisserie-4.jpg";
 
 export const SAUCES = [
   "Sauce Crincrin",
@@ -105,22 +101,14 @@ export const CATEGORIES = ["Tous les plats", "Petit déjeuner", "Déjeuner", "D�
 
 export type PâtisserieGlacesItem = {
   id: string;
-  name: string;
   image: string;
-  category: "Pâtisserie" | "Glaces";
 };
 
 export const PATISSERIE_GLACES_ITEMS: PâtisserieGlacesItem[] = [
-  // Pâtisserie
-  { id: "pg-croissant", name: "Croissant", image: pastryCroissant, category: "Pâtisserie" },
-  { id: "pg-pain-chocolat", name: "Pain au chocolat", image: pastryPainChocolat, category: "Pâtisserie" },
-  { id: "pg-quatre-quarts", name: "Gâteau quatre-quarts", image: pastryQuatreQuarts, category: "Pâtisserie" },
-  { id: "pg-beignet", name: "Beignet sucré", image: pastryBeignet, category: "Pâtisserie" },
-  // Glaces
-  { id: "pg-vanille", name: "Vanille", image: iceCreamVanille, category: "Glaces" },
-  { id: "pg-chocolat", name: "Chocolat", image: iceCreamChocolat, category: "Glaces" },
-  { id: "pg-fraise", name: "Fraise", image: iceCreamFraise, category: "Glaces" },
-  { id: "pg-coco", name: "Coco", image: iceCreamCoco, category: "Glaces" },
+  { id: "pg-1", image: patisserie1 },
+  { id: "pg-2", image: patisserie2 },
+  { id: "pg-3", image: patisserie3 },
+  { id: "pg-4", image: patisserie4 },
 ];
 
 // ── Petit déjeuner : TOUJOURS disponible, 7j/7 ───────────────
