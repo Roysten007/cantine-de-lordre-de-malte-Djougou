@@ -131,7 +131,7 @@ export const LUNCH_MENU: Dish[] = [
   { id: "riz-dej", name: "Riz", price: 1000, category: "Déjeuner", image: riz, hasSauceOption: true, defaultSauce: "Sauce Gombo", tag: "Sauce au choix" },
   { id: "pate-noire-dej", name: "Pâte noire", price: 700, category: "Déjeuner", image: pateNoire, hasSauceOption: true, defaultSauce: "Sauce Légumes", tag: "Sauce au choix" },
   { id: "pate-blanche-dej", name: "Pâte blanche", price: 700, category: "Déjeuner", image: pateBlanche, hasSauceOption: true, defaultSauce: "Sauce Crincrin", tag: "Sauce au choix" },
-  { id: "spaghetti-dej", name: "Spaghetti", price: 1000, category: "Déjeuner", image: spaghetti, hasSauceOption: true, defaultSauce: "Sauce Blokoto", tag: "Sauce au choix" },
+  { id: "spaghetti-dej", name: "Spaghetti", price: 1000, category: "Déjeuner", image: spaghetti, tag: "Express & Chaud" },
   { id: "monyo-dej", name: "Monyo", price: 1000, category: "Déjeuner", image: monyo, tag: "Plat traditionnel" },
   { id: "attieke-dej", name: "Attiéké", price: 1000, category: "Déjeuner", image: attieke, featured: true, tag: "Incontournable" },
 ];
@@ -161,7 +161,7 @@ export const WEEKLY_SCHEDULE: Record<DayOfWeek, DaySchedule> = {
     suggestedDinnerNames: ["Riz"],
     lunch: [
       { id: "lundi-pate-blanche", name: "Pâte blanche", price: 700, category: "Déjeuner", image: pateBlanche, defaultSauce: "Sauce Kpama", hasSauceOption: true, tag: "Sauce Kpama", featured: true },
-      { id: "lundi-spaghetti", name: "Spaghetti", price: 1000, category: "Déjeuner", image: spaghetti, hasSauceOption: true, defaultSauce: "Sauce Blokoto", tag: "Sauce Blokoto" },
+      { id: "lundi-spaghetti", name: "Spaghetti", price: 1000, category: "Déjeuner", image: spaghetti, tag: "Gourmand" },
     ],
     dinner: [
       { id: "lundi-riz-din", name: "Riz", price: 1000, category: "Dîner", image: riz, hasSauceOption: true, tag: "Sauce au choix" },
@@ -204,7 +204,7 @@ export const WEEKLY_SCHEDULE: Record<DayOfWeek, DaySchedule> = {
     lunch: [
       { id: "jeudi-attieke", name: "Attiéké", price: 1000, category: "Déjeuner", image: attieke, featured: true, tag: "Incontournable" },
       { id: "jeudi-pate-noire", name: "Pâte noire", price: 700, category: "Déjeuner", image: pateNoire, defaultSauce: "Sauce Blokoto", hasSauceOption: true, tag: "Sauce Blokoto" },
-      { id: "jeudi-spaghetti", name: "Spaghetti", price: 1000, category: "Déjeuner", image: spaghetti, hasSauceOption: true, defaultSauce: "Sauce Blokoto", tag: "Sauce Blokoto" },
+      { id: "jeudi-spaghetti", name: "Spaghetti", price: 1000, category: "Déjeuner", image: spaghetti, tag: "Gourmand" },
     ],
     dinner: [
       { id: "jeudi-pate-blanche", name: "Pâte blanche", price: 700, category: "Dîner", image: pateBlanche, defaultSauce: "Sauce Gombo", hasSauceOption: true, tag: "Sauce Gombo" },
@@ -217,7 +217,7 @@ export const WEEKLY_SCHEDULE: Record<DayOfWeek, DaySchedule> = {
     suggestedLunchNames: ["Spaghetti", "Pâte blanche"],
     suggestedDinnerNames: ["Monyo"],
     lunch: [
-      { id: "vendredi-spaghetti", name: "Spaghetti", price: 1000, category: "Déjeuner", image: spaghetti, featured: true, hasSauceOption: true, defaultSauce: "Sauce Blokoto", tag: "Sauce Blokoto" },
+      { id: "vendredi-spaghetti", name: "Spaghetti", price: 1000, category: "Déjeuner", image: spaghetti, featured: true, tag: "Star du Vendredi" },
       { id: "vendredi-pate-blanche", name: "Pâte blanche", price: 700, category: "Déjeuner", image: pateBlanche, defaultSauce: "Sauce Légumes", hasSauceOption: true, tag: "Sauce Légumes" },
     ],
     dinner: [

@@ -500,9 +500,9 @@ function MenuSection() {
                     Voir toute la carte Déjeuner →
                   </button>
                 </div>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {daySchedule.lunch.map((d, idx) => (
-                    <DishCard key={d.id} dish={d} big={idx === 0} onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)} />
+                <div className="flex flex-col sm:flex-row gap-6 w-full [&>*]:flex-1 [&>*]:min-w-0">
+                  {daySchedule.lunch.map((d) => (
+                    <DishCard key={d.id} dish={d} />
                   ))}
                 </div>
               </div>
@@ -518,9 +518,9 @@ function MenuSection() {
                     Voir toute la carte Dîner →
                   </button>
                 </div>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="flex flex-col sm:flex-row gap-6 w-full [&>*]:flex-1 [&>*]:min-w-0">
                   {daySchedule.dinner.map((d) => (
-                    <DishCard key={d.id} dish={d} onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)} />
+                    <DishCard key={d.id} dish={d} />
                   ))}
                 </div>
               </div>
@@ -633,12 +633,10 @@ function MenuSection() {
 
             {/* Dishes Grid */}
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {catalogDishes.map((d, idx) => (
+              {catalogDishes.map((d) => (
                 <DishCard
                   key={d.id}
                   dish={d}
-                  big={idx === 0}
-                  onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)}
                 />
               ))}
             </div>
