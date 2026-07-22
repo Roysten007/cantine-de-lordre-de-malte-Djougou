@@ -29,6 +29,8 @@ import patisserie1 from "@/assets/patisserie-1.jpg";
 import patisserie2 from "@/assets/patisserie-2.jpg";
 import patisserie3 from "@/assets/patisserie-3.jpg";
 import patisserie4 from "@/assets/patisserie-4.jpg";
+import patisserie5 from "@/assets/patisserie-5.jpg";
+import patisserie6 from "@/assets/patisserie-6.jpg";
 
 export const SAUCES = [
   "Sauce Crincrin",
@@ -109,6 +111,8 @@ export const PATISSERIE_GLACES_ITEMS: PâtisserieGlacesItem[] = [
   { id: "pg-2", image: patisserie2 },
   { id: "pg-3", image: patisserie3 },
   { id: "pg-4", image: patisserie4 },
+  { id: "pg-5", image: patisserie5 },
+  { id: "pg-6", image: patisserie6 },
 ];
 
 // ── Petit déjeuner : TOUJOURS disponible, 7j/7 ───────────────
