@@ -500,7 +500,7 @@ function MenuSection() {
                     Voir toute la carte Déjeuner →
                   </button>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-6 w-full [&>*]:flex-1 [&>*]:min-w-0">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {daySchedule.lunch.map((d) => (
                     <DishCard key={d.id} dish={d} />
                   ))}
@@ -518,7 +518,7 @@ function MenuSection() {
                     Voir toute la carte Dîner →
                   </button>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-6 w-full [&>*]:flex-1 [&>*]:min-w-0">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {daySchedule.dinner.map((d) => (
                     <DishCard key={d.id} dish={d} />
                   ))}

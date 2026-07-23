@@ -20,6 +20,7 @@ import sauceBlokoto from "@/assets/sauce-blokoto.jpg";
 import sauceCrincrin from "@/assets/sauce-crincrin.jpg";
 import sauceGombo from "@/assets/sauce-gombo.jpg";
 import sauceLegumes from "@/assets/sauce-legumes.jpg";
+import sauceKpama from "@/assets/sauce-kpama.jpg";
 
 // ── Fallback & Spécialités ─────────────────────────────────────
 import fonio from "@/assets/dish-fonio.jpg";
@@ -84,7 +85,7 @@ export const SAUCES_INFO: SauceInfo[] = [
     tagline: "Kpanman & Goût Profond",
     description:
       "Préparée avec du kpanman (peau de bœuf), cette sauce apporte une texture unique et un goût profond, typique de la cuisine béninoise authentique.",
-    image: sauceBlokoto,
+    image: sauceKpama,
   },
 ];
 
