@@ -59,7 +59,7 @@ export function CartPanel() {
       />
 
       {/* Centered Modal Card */}
-      <div className="fixed left-1/2 top-1/2 z-50 flex max-h-[90vh] w-full max-w-md -translate-x-1/2 -translate-y-1/2 flex-col rounded-[2.5rem] bg-card p-6 shadow-2xl ring-1 ring-border animate-in zoom-in-95 duration-200">
+      <div className="fixed left-1/2 top-1/2 z-50 flex max-h-[92vh] w-[94%] max-w-md -translate-x-1/2 -translate-y-1/2 flex-col rounded-[2rem] sm:rounded-[2.5rem] bg-card p-4 sm:p-6 shadow-2xl ring-1 ring-border animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border/80 pb-4">
           <div className="flex items-center gap-2.5">

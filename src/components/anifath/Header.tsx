@@ -74,15 +74,15 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         {/* Logo */}
-        <a href="#hero" className="group flex items-center gap-3">
-          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-coral to-amber text-cream font-display text-xl font-black shadow-md shadow-coral/30 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
+        <a href="#hero" className="group flex items-center gap-2.5 min-w-0">
+          <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-coral to-amber text-cream font-display text-lg sm:text-xl font-black shadow-md shadow-coral/30 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
             c
           </div>
-          <div className="flex flex-col">
-            <span className="font-display text-xl font-extrabold tracking-tight text-brown-dark transition-colors group-hover:text-coral">
+          <div className="flex flex-col min-w-0">
+            <span className="font-display text-base sm:text-xl font-extrabold tracking-tight text-brown-dark transition-colors group-hover:text-coral truncate">
               La Cantine
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-brown-dark/50">
+            <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-brown-dark/50 truncate">
               Ordre de Malte • Djougou
             </span>
           </div>

@@ -449,12 +449,12 @@ function MenuSection() {
               </div>
 
               {/* Sélecteur rapide des jours de la semaine */}
-              <div className="mt-6 flex flex-wrap gap-2 pt-4 border-t border-cream/20">
+              <div className="mt-6 flex flex-nowrap sm:flex-wrap overflow-x-auto gap-2 pt-4 border-t border-cream/20 pb-1 scrollbar-none">
                 {DAYS_OF_WEEK.map((d) => (
                   <button
                     key={d}
                     onClick={() => setSelectedDay(d)}
-                    className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-black transition-all ${
+                    className={`flex items-center gap-1.5 shrink-0 rounded-full px-4 py-2 text-xs font-black transition-all ${
                       selectedDay === d
                         ? "bg-amber text-brown-dark shadow-md scale-105"
                         : "bg-cream/15 text-cream hover:bg-cream/30"
@@ -482,7 +482,7 @@ function MenuSection() {
                   </h4>
                   <span className="text-xs font-bold text-brown-dark/60">5 options 7j/7</span>
                 </div>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-5">
                   {breakfastDishes.map((d) => (
                     <DishCard key={d.id} dish={d} onSelectSauce={(dishToSelect) => setSauceModalDish(dishToSelect)} />
                   ))}
