@@ -203,7 +203,7 @@ function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
             </span>
-            <span>Ouvert aujourd'hui • 6h30 - 22h00</span>
+            <span>Ouvert aujourd'hui • 7h00 - 22h00</span>
           </div>
 
           <h1 className="font-display text-4xl font-black leading-[1.08] tracking-tight text-brown-dark sm:text-5xl lg:text-6xl">
@@ -892,7 +892,7 @@ function FAQ() {
     { q: "Est-ce que je peux commander depuis ma chambre ?", a: "Oui, indique simplement le numéro de ta chambre et ton service lors de la commande." },
     { q: "Quels sont les moyens de paiement acceptés ?", a: "Tu peux payer en espèces à la livraison, ou par Mobile Money (MTN Mobile Money, Moov Money) à la commande." },
     { q: "La cantine est-elle ouverte au public, pas seulement à l'hôpital ?", a: "Absolument ! La Cantine est ouverte à tous : personnel de l'hôpital, patients, visiteurs, et tous les habitants de Djougou." },
-    { q: "Quels sont vos horaires d'ouverture ?", a: "Nous sommes ouverts tous les jours, du lundi au dimanche, de 06h30 à 22h00." },
+    { q: "Quels sont vos horaires d'ouverture ?", a: "Nous sommes ouverts tous les jours, du lundi au dimanche, de 07h00 à 22h00." },
     { q: "Proposez-vous des plats pour régimes spécifiques ?", a: "Oui, nos chefs s'adaptent. Contacte-nous directement pour nous préciser tes besoins nutritionnels." },
   ];
   const [open, setOpen] = useState<number | null>(0);

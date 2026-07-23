@@ -5,7 +5,7 @@ export const SITE = {
   phone: "+229 01 43 54 54 15",
   phoneRaw: "+2290143545415",
   address: "Enceinte de l'Hôpital de l'Ordre de Malte — Djougou, Bénin",
-  hours: "Lun – Dim · 06h30 – 22h00",
+  hours: "Lun – Dim · 07h00 – 22h00",
 };
 
 export function buildWhatsAppUrl(message: string) {
